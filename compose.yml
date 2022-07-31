@@ -3,7 +3,7 @@ services:
     image: node:alpine
     platform: linux/arm64
     volumes:
-      - ./node:~/node
+      - ./node:/assets
     ports:
       - 8080:8080
   mysql:
