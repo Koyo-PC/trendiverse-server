@@ -38,24 +38,24 @@ $ cd trendiverse-server
 ## Run
 
 ```bash
-$ docker compose up -d
-$ docker compose ps # check
+$ sudo docker compose up -d
+$ sudo docker compose ps # check
 ```
 
 ## Update
 
 ```bash
-$ docker compose up -d
+$ sudo docker compose up -d
 ```
 
 ## Exit
 
 ```bash
-$ docker compose stop
+$ sudo docker compose stop
 ```
 
 ## Delete
 
 ```bash
-$ docker compose down --volumes
+$ sudo docker compose down --volumes
 ```
