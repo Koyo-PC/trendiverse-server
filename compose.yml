@@ -1,0 +1,32 @@
+services:
+  node:
+    image: node:alpine
+    platform: linux/arm64
+    volumes:
+      - ./node:~/node
+    ports:
+      - 8080:8080
+  mysql:
+    image: mysql
+    volumes:
+      - ./db_data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    secrets:
+      - DB_PASSWORD
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/DB_ROOT_PASSWORD
+      MYSQL_DATABASE: /run/secrets/DB_NAME
+      MYSQL_USER: /run/secrets/DB_USER
+      MYSQL_PASSWORD: /run/secrets/DB_PASSWORD
+      TZ: Asia/Tokyo
+
+secrets:
+  DB_NAME:
+    file: ./secrets/DB_NAME.txt
+  DB_PASSWORD:
+    file: ./secrets/DB_PASSWORD.txt
+  DB_ROOT_PASSWORD:
+    file: ./secrets/DB_ROOT_PASSWORD.txt
+  DB_USER:
+    file: ./secrets/DB_USER.txt

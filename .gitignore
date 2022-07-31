@@ -1,0 +1,2 @@
+secrets/*
+!secrets/files.txt
