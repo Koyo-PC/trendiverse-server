@@ -27,6 +27,13 @@ $ sudo apt update
 $ sudo apt install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 ```
 
+### MySQL Client(Optional)
+
+```bash
+$ sudo apt update
+$ sudo apt install mysql-client
+```
+
 ## Clone
 
 ```bash
@@ -40,6 +47,8 @@ $ cd trendiverse-server
 ```bash
 $ sudo docker compose up -d
 $ sudo docker compose ps # check
+
+$ mysql -h localhost -P 3306 -u root -p --protocol=tcp # connect to db, need mysql-client
 ```
 
 ## Update
