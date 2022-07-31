@@ -13,7 +13,10 @@ services:
     ports:
       - 3306:3306
     secrets:
+      - DB_NAME
       - DB_PASSWORD
+      - DB_ROOT_PASSWORD
+      - DB_USER
     environment:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/DB_ROOT_PASSWORD
       MYSQL_DATABASE: /run/secrets/DB_NAME
