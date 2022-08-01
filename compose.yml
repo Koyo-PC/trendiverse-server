@@ -25,9 +25,9 @@ services:
       - DB_USER
     environment:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/DB_ROOT_PASSWORD
-      MYSQL_DATABASE: /run/secrets/DB_NAME
-      MYSQL_USER: /run/secrets/DB_USER
-      MYSQL_PASSWORD: /run/secrets/DB_PASSWORD
+      MYSQL_DATABASE_FILE: /run/secrets/DB_NAME
+      MYSQL_USER_FILE: /run/secrets/DB_USER
+      MYSQL_PASSWORD_FILE: /run/secrets/DB_PASSWORD
       TZ: Asia/Tokyo
   tensorflow:
     image: tensorflow/tensorflow:latest
