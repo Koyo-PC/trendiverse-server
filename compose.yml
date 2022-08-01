@@ -1,15 +1,20 @@
 services:
   node:
     image: node:alpine
-    platform: linux/arm64
+    restart: always
     volumes:
       - ./node:/assets
+    networks:
+      - trendiverse-shared
     ports:
       - 8080:8080
   mysql:
     image: mysql
+    restart: always
     volumes:
       - ./db_data:/var/lib/mysql
+    networks:
+      - trendiverse-shared
     ports:
       - 3306:3306
     secrets:
@@ -23,6 +28,13 @@ services:
       MYSQL_USER: /run/secrets/DB_USER
       MYSQL_PASSWORD: /run/secrets/DB_PASSWORD
       TZ: Asia/Tokyo
+  tensorflow:
+    image: tensorflow/tensorflow:latest
+    restart: always
+    volumes:
+      - ./tensorflow:/assets
+    networks:
+      - trendiverse-shared
 
 secrets:
   DB_NAME:
@@ -33,3 +45,6 @@ secrets:
     file: ./secrets/DB_ROOT_PASSWORD.txt
   DB_USER:
     file: ./secrets/DB_USER.txt
+
+networks:
+  trendiverse-shared:
