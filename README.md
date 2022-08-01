@@ -46,7 +46,7 @@ $ cd trendiverse-server
 
 ```bash
 $ cd secrets
-$ cat files.txt | xargs -p -I {filename} sh -c "echo '' >> '$1'" -- {filename}
+$ cat files.txt | sed -z -e 's/\r//g' | xargs -I {file} touch {file}
 ```
 
 ## Run
