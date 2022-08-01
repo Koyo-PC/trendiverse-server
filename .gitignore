@@ -1,2 +1,4 @@
 secrets/*
 !secrets/files.txt
+db_data/
+!db_data/.gitkeep

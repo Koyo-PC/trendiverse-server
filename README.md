@@ -42,6 +42,13 @@ $ git clone git@github.com:Koyo-PC/trendiverse-server.git
 $ cd trendiverse-server
 ```
 
+## Setup secrets
+
+```bash
+$ cd secrets
+$ cat files.txt | xargs -p -I {filename} sh -c "echo '' >> '$1'" -- {filename}
+```
+
 ## Run
 
 ```bash
