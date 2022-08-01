@@ -8,6 +8,7 @@ services:
       - trendiverse-shared
     ports:
       - 8080:8080
+    command: /bin/sh -c "cd /assets/rest-api && node index.js"
   mysql:
     image: mysql
     restart: always
