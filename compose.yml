@@ -10,7 +10,7 @@ services:
       - 8080:8080
     command: /bin/sh -c "cd /assets/rest-api && npm ci && node index.js"
   mysql:
-    image: mysql
+    image: mysql:latest
     restart: always
     volumes:
       - ./db_data:/var/lib/mysql
@@ -29,13 +29,14 @@ services:
       MYSQL_USER_FILE: /run/secrets/DB_USER
       MYSQL_PASSWORD_FILE: /run/secrets/DB_PASSWORD
       TZ: Asia/Tokyo
-  tensorflow:
-    image: tensorflow/tensorflow:latest
+  python:
+    image: python:alpine
     restart: always
     volumes:
-      - ./tensorflow:/assets
+      - ./python:/assets
     networks:
       - trendiverse-shared
+    command: /bin/sh /assets/setup.sh
 
 secrets:
   DB_NAME:
