@@ -4,7 +4,7 @@ var app = express();
 app.get("/list", (req, res) => {
     // last_request: yyyy-MM-dd-HH-mm-ss
     // example: /list?last_request=2022-01-01-00-00-00
-    const last_request = req.params.last_request;
+    const last_request = req.query.last_request;
     if (last_request == undefined) {
         res.status(400).send("parameter 'last_request' is required.");
         return;
@@ -30,8 +30,8 @@ app.get("/data", (req, res) => {
     // last_request: yyyy-MM-dd-HH-mm-ss
     // name: String, URL-encoded
     // example: /info?name=Hoge&last_request=2022-01-01-00-00-00
-    const last_request = req.params.last_request;
-    const name = req.params.name;
+    const last_request = req.query.last_request;
+    const name = req.query.name;
     if (last_request == undefined) {
         res.status(400).send("parameter 'last_request' is required.");
         return;
@@ -77,8 +77,8 @@ app.get("/info", (req, res) => {
     // last_request: yyyy-MM-dd-HH-mm-ss
     // name: String, URL-encoded
     // example: /info?name=Hoge&last_request=2022-01-01-00-00-00
-    const last_request = req.params.last_request;
-    const name = req.params.name;
+    const last_request = req.query.last_request;
+    const name = req.query.name;
     if (last_request == undefined) {
         res.status(400).send("parameter 'last_request' is required.");
         return;
