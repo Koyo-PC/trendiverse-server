@@ -18,23 +18,6 @@ function main() {
             }
             res.writeHead(200, {"content-type": "application/json"});
             res.end(TrendiverseAPI.onListRequest(last_request));
-        } else if (path === "/data") {
-            // last_request: yyyy-MM-dd-HH-mm-ss
-            // name: String, URL-encoded
-            // example: /info?name=Hoge&last_request=2022-01-01-00-00-00
-            const last_request = params.get("last_request");
-            const name = params.get("name");
-            if (last_request === null) {
-                res.writeHead(400, {"content-type": "text/plain"});
-                res.end("parameter 'last_request' is required.");
-                return;
-            } else if (name === null) {
-                res.writeHead(400, {"content-type": "text/plain"});
-                res.end("parameter 'name' is required.");
-                return;
-            }
-            res.writeHead(200, {"content-type": "application/json"});
-            res.end(TrendiverseAPI.onDataRequest(last_request, name));
         } else if (path === "/info") {
             // last_request: yyyy-MM-dd-HH-mm-ss
             // name: String, URL-encoded
