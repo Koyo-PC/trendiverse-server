@@ -1,98 +1,62 @@
-var express = require("express");
+import http from "http"
+import {TrendiverseAPI} from "./api/api.js";
 
-var app = express();
-app.get("/list", (req, res) => {
-    // last_request: yyyy-MM-dd-HH-mm-ss
-    // example: /list?last_request=2022-01-01-00-00-00
-    const last_request = req.query.last_request;
-    if (last_request == undefined) {
-        res.status(400).send("parameter 'last_request' is required.");
-        return;
-    }
-    // TODO
-    res.status(200).send(`
-{
-    "google": [
-        "Trend_01",
-        "Trend_02",
-        "Trend_03",
-        "Trend_04",
-    ],
-    "twitter": [
-        "Trend_01",
-        "Trend_02",
-        "Trend_001",
-        "Trend_002",
-    ]
-}`);
-});
-app.get("/data", (req, res) => {
-    // last_request: yyyy-MM-dd-HH-mm-ss
-    // name: String, URL-encoded
-    // example: /info?name=Hoge&last_request=2022-01-01-00-00-00
-    const last_request = req.query.last_request;
-    const name = req.query.name;
-    if (last_request == undefined) {
-        res.status(400).send("parameter 'last_request' is required.");
-        return;
-    }
-    if (name == undefined) {
-        res.status(400).send("parameter 'name' is required.");
-        return;
-    }
-    // TODO
-    res.status(200).send(`
-{
-    "google": [
-        {
-            "date": "2021-01-01 00:00:00",
-            "hotness": 10.2398
-        },
-        {
-            "date": "2020-01-01 00:05:00",
-            "hotness": 43.3498
-        },
-        {
-            "date": "2021-01-01 00:10:00",
-            "hotness": 83.8943
+function main() {
+    http.createServer((req, res) => {
+        const url = new URL(req.url, `http://${req.headers.host}`);
+        const path = url.pathname;
+        const params = url.searchParams;
+        if (path === "/list") {
+            // last_request: yyyy-MM-dd-HH-mm-ss
+            // example: /list?last_request=2022-01-01-00-00-00
+            const last_request = params.get("last_request");
+            console.log(last_request)
+            if (last_request === null) {
+                res.writeHead(400, {"content-type": "text/plain"});
+                res.end("parameter 'last_request' is required.");
+                return;
+            }
+            res.writeHead(200, {"content-type": "application/json"});
+            res.end(TrendiverseAPI.onListRequest(last_request));
+        } else if (path === "/data") {
+            // last_request: yyyy-MM-dd-HH-mm-ss
+            // name: String, URL-encoded
+            // example: /info?name=Hoge&last_request=2022-01-01-00-00-00
+            const last_request = params.get("last_request");
+            const name = params.get("name");
+            if (last_request === null) {
+                res.writeHead(400, {"content-type": "text/plain"});
+                res.end("parameter 'last_request' is required.");
+                return;
+            } else if (name === null) {
+                res.writeHead(400, {"content-type": "text/plain"});
+                res.end("parameter 'name' is required.");
+                return;
+            }
+            res.writeHead(200, {"content-type": "application/json"});
+            res.end(TrendiverseAPI.onDataRequest(last_request, name));
+        } else if (path === "/info") {
+            // last_request: yyyy-MM-dd-HH-mm-ss
+            // name: String, URL-encoded
+            // example: /info?name=Hoge&last_request=2022-01-01-00-00-00
+            const last_request = params.get("last_request");
+            const name = params.get("name");
+            if (last_request === null) {
+                res.writeHead(400, {"content-type": "text/plain"});
+                res.end("parameter 'last_request' is required.");
+                return;
+            } else if (name === null) {
+                res.writeHead(400, {"content-type": "text/plain"});
+                res.end("parameter 'name' is required.");
+                return;
+            }
+            res.writeHead(200, {"content-type": "application/json"});
+            res.end(TrendiverseAPI.onInfoRequest(last_request, name));
+        } else {
+            res.writeHead(404, {"content-type": "text/plain"});
+            res.end("404 Not Found");
+            return;
         }
-    ],
-    "twitter": [
-        {
-            "date": "2021-01-01 00:00:10",
-            "hotness": 84.2398
-        },
-        {
-            "date": "2021-01-01 00:05:20",
-            "hotness": 15.3289
-        },
-        {
-            "date": "2021-01-01 00:10:30",
-            "hotness": 357.2398
-        }
-    ]
-}`);
-});
-app.get("/info", (req, res) => {
-    // last_request: yyyy-MM-dd-HH-mm-ss
-    // name: String, URL-encoded
-    // example: /info?name=Hoge&last_request=2022-01-01-00-00-00
-    const last_request = req.query.last_request;
-    const name = req.query.name;
-    if (last_request == undefined) {
-        res.status(400).send("parameter 'last_request' is required.");
-        return;
-    }
-    if (name == undefined) {
-        res.status(400).send("parameter 'name' is required.");
-        return;
-    }
-    // TODO
-    res.status(200).send(`
-{
-    "category": "Test",
-    "related": ["Trend_01"]
-}`);
-});
-
-app.listen(8080);
+    }).listen(8080);
+}
+main();
