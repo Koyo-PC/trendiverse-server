@@ -12,9 +12,12 @@ class TrendiverseDB {
     constructor() {
         /** @type {Pool} */
         this.pool = mysql.createPool({
-            host: DockerUtil.getSecret("DB_HOST"),
-            user: DockerUtil.getSecret("DB_USER"),
-            password: DockerUtil.getSecret("DB_PASSWORD"),
+            // host: DockerUtil.getSecret("DB_HOST"),
+            host: "mysql:3306",
+            // user: DockerUtil.getSecret("DB_USER"),
+            user: "root",
+            // password: DockerUtil.getSecret("DB_PASSWORD"),
+            password: DockerUtil.getSecret("DB_ROOT_PASSWORD"),
             database: DockerUtil.getSecret("DB_NAME"),
         });
     }
