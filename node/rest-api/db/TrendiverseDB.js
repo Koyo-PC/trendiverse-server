@@ -1,10 +1,10 @@
 import mysql from "mysql"
 import {DockerUtil} from "../dockerUtil.js";
 // ↓ 型注釈用
-import Pool from "mysql/lib/Pool"
-import Connection from "mysql/lib/Connection"
-import PoolConnection from "mysql/lib/PoolConnection"
-import Query from "mysql/lib/Connection/protocol/sequences/Query"
+import Pool from "mysql/lib/Pool.js"
+// import Connection from "mysql/lib/Connection"
+import PoolConnection from "mysql/lib/PoolConnection.js"
+// import Query from "mysql/lib/Connection/protocol/sequences/Query"
 // ↑ 型注釈用
 
 class TrendiverseDB {
@@ -12,6 +12,7 @@ class TrendiverseDB {
     constructor() {
         /** @type {Pool} */
         this.pool = mysql.createPool({
+            connectionLimit : 10,
             // host: DockerUtil.getSecret("DB_HOST"),
             host: "mysql:3306",
             // user: DockerUtil.getSecret("DB_USER"),
@@ -104,7 +105,7 @@ class TrendiverseDB {
             if (Array.isArray(res) && !all) return res[0];
             else return res;
         } catch (err) {
-            connection.release();
+            // connection.release();
             throw err;
         }
     };

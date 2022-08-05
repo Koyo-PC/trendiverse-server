@@ -1,3 +1,14 @@
+import DB from "../db/TrendiverseDB.js";
+
+/**
+ * This function involves a table named ${name}.
+ * You can create such table by executing the command below.
+ * 
+ * create table trend1 (date timestamp default current_timestamp, hotness float);
+ * 
+ * @returns {string}
+ */
+
 export function onInfoRequest(last_request, name) {
     return JSON.stringify({
         "category": "Test",
