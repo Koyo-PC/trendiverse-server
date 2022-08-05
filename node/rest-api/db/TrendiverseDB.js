@@ -14,7 +14,7 @@ class TrendiverseDB {
         this.pool = mysql.createPool({
             connectionLimit : 10,
             // host: DockerUtil.getSecret("DB_HOST"),
-            host: "mysql:3306",
+            host: "172.30.0.11:3306",
             // user: DockerUtil.getSecret("DB_USER"),
             user: "root",
             // password: DockerUtil.getSecret("DB_PASSWORD"),

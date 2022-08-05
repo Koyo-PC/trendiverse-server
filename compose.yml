@@ -5,7 +5,8 @@ services:
     volumes:
       - ./node:/assets
     networks:
-      - trendiverse-shared
+      trendiverse-shared:
+        ipv4_address: 172.30.0.10
     ports:
       - 8080:8080
     secrets:
@@ -20,7 +21,8 @@ services:
     volumes:
       - ./db_data:/var/lib/mysql
     networks:
-      - trendiverse-shared
+      trendiverse-shared:
+        ipv4_address: 172.30.0.11
     ports:
       - 3306:3306
     secrets:
@@ -40,7 +42,8 @@ services:
     volumes:
       - ./miniconda:/assets
     networks:
-      - trendiverse-shared
+      trendiverse-shared:
+        ipv4_address: 172.30.0.12
     command: /bin/bash /assets/setup.sh
 
 secrets:
@@ -55,3 +58,8 @@ secrets:
 
 networks:
   trendiverse-shared:
+    driver: bridge
+    ipam:
+     driver: default
+     config:
+       - subnet: 172.30.0.0/24
