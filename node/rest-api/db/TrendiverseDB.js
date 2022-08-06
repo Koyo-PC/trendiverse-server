@@ -106,18 +106,36 @@ class TrendiverseDB {
             try {
                 if(this.pool == undefined) await this.#createPool();
                 connection = await this.#getConnection();
-                const res = await this.#query(connection, query_sentence, arg);
+                let res = await this.#query(connection, query_sentence, arg);
                 connection.release();
-                
-                //配列で帰ってきたら
-                if (Array.isArray(res) && !all) return resolve(res[0]);
-                else return resolve(res);
+
+                if (Array.isArray(res)){ //array
+                    res = Object.values(JSON.parse(JSON.stringify(res)));
+                    if(!all) return resolve(res[0]);
+                    else resolve(res);
+                } else return resolve(res); //not array
             } catch (err) {
                 // connection.release();
                 reject(err);
             }
         });
     };
+
+    /**
+     * This function checks if there is a table named ${name} in your database.
+     * 
+     * @param {string} name table name
+     * @returns {bool}
+     */
+
+    async tableCheck(name) {
+        try{
+            await this.queryp(`select 1 from ${name} limit 1`);
+            return true;
+        } catch {
+            return false;
+        }
+    }
 }
 
 module.exports = new TrendiverseDB();
