@@ -1,7 +1,7 @@
-import {onListRequest} from "./list.js";
-import {onInfoRequest} from "./info.js";
+const onListRequest = require("./list.js");
+const onInfoRequest = require("./info.js");
 
-export class TrendiverseAPI {
+module.exports =  class TrendiverseAPI {
     static onListRequest = onListRequest;
     static onInfoRequest = onInfoRequest;
 }

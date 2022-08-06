@@ -1,4 +1,4 @@
-import DB from "../db/TrendiverseDB.js";
+const DB = require("../db/TrendiverseDB.js");
 
 /**
  * This function involves a table named ${name}.
@@ -9,7 +9,7 @@ import DB from "../db/TrendiverseDB.js";
  * @returns {string}
  */
 
-export function onInfoRequest(last_request, name) {
+module.exports =  function onInfoRequest(last_request, name) {
     return JSON.stringify({
         "category": "Test",
         "related": ["Trend_01"],

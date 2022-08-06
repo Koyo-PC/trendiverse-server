@@ -1,8 +1,8 @@
-import http from "http"
-import {TrendiverseAPI} from "./api/api.js";
+const http = require("http");
+const TrendiverseAPI = require("./api/api.js");
 
 function main() {
-    http.createServer((req, res) => {
+    http.createServer(async (req, res) => {
         const url = new URL(req.url, `http://${req.headers.host}`);
         const path = url.pathname;
         const params = url.searchParams;
@@ -10,7 +10,8 @@ function main() {
             // last_request: yyyy-MM-dd-HH-mm-ss
             // example: /list?last_request=2022-01-01-00-00-00
             res.writeHead(200, {"content-type": "application/json"});
-            res.end(TrendiverseAPI.onListRequest());
+            const list = await TrendiverseAPI.onListRequest();
+            res.end(list);
         } else if (path === "/info") {
             // last_request: yyyy-MM-dd-HH-mm-ss
             // name: String, URL-encoded
@@ -27,7 +28,8 @@ function main() {
                 return;
             }
             res.writeHead(200, {"content-type": "application/json"});
-            res.end(TrendiverseAPI.onInfoRequest(last_request, name));
+            const info = await TrendiverseAPI.onInfoRequest();
+            res.end(info);
         } else {
             res.writeHead(404, {"content-type": "text/plain"});
             res.end("404 Not Found");

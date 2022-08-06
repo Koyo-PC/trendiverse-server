@@ -1,43 +1,48 @@
-import mysql from "mysql"
-import {DockerUtil} from "../dockerUtil.js";
+const mysql = require("mysql");
+const DockerUtil = require("../dockerUtil.js");
 // ↓ 型注釈用
-import Pool from "mysql/lib/Pool.js"
+const Pool = require("mysql/lib/Pool.js");
 // import Connection from "mysql/lib/Connection"
-import PoolConnection from "mysql/lib/PoolConnection.js"
+const PoolConnection = require("mysql/lib/PoolConnection.js");
 // import Query from "mysql/lib/Connection/protocol/sequences/Query"
 // ↑ 型注釈用
 
 class TrendiverseDB {
 
     constructor() {
+        this.pool = undefined;
+    }
+
+    async #createPool(){
         /** @type {Pool} */
         this.pool = mysql.createPool({
             connectionLimit : 10,
-            // host: DockerUtil.getSecret("DB_HOST"),
             host: "172.30.0.11",
             port: 3306,
-            // user: DockerUtil.getSecret("DB_USER"),
             user: "root",
-            // password: DockerUtil.getSecret("DB_PASSWORD"),
-            password: DockerUtil.getSecret("DB_ROOT_PASSWORD"),
-            database: DockerUtil.getSecret("DB_NAME"),
+            password: await DockerUtil.getSecret("DB_ROOT_PASSWORD"),
+            // host: DockerUtil.getSecret("DB_HOST"),
+            // user: await DockerUtil.getSecret("DB_USER"),
+            // password: await DockerUtil.getSecret("DB_PASSWORD"),
+            database: await DockerUtil.getSecret("DB_NAME"),
         });
     }
 
     /**
      * @returns {PoolConnection}
      */
-    async #getConnection() {
-        return await new Promise((resolve, reject) => {
-            this.pool.getConnection((err, connection) => {
+    #getConnection() {
+        return new Promise((resolve, reject) => {
+            //ERROR
+            this.pool.getConnection((err, connection) => { 
                 if (err) reject(err);
                 else resolve(connection);
-            })
+            });
         });
     }
 
-    async #beginTransaction(connection) {
-        return await new Promise((resolve, reject) => {
+    #beginTransaction(connection) {
+        return new Promise((resolve, reject) => {
             connection.beginTransaction((err) => {
                 if (err) {
                     reject(err);
@@ -54,8 +59,8 @@ class TrendiverseDB {
      * @param {string[]} params
      * @returns {string | string[]}
      */
-    async #query(connection, statement, params) {
-        return await new Promise((resolve, reject) => {
+    #query(connection, statement, params) {
+        return new Promise((resolve, reject) => {
             connection.query(statement, params, (err, results, fields) => {
                 if (err) {
                     reject(err);
@@ -66,8 +71,8 @@ class TrendiverseDB {
         });
     }
 
-    async #commit(connection) {
-        return await new Promise((resolve, reject) => {
+    #commit(connection) {
+        return new Promise((resolve, reject) => {
             connection.commit((err) => {
                 if (err) {
                     reject(err);
@@ -78,8 +83,8 @@ class TrendiverseDB {
         });
     };
 
-    async #rollback(connection, err) {
-        return await new Promise((resolve, reject) => {
+    #rollback(connection, err) {
+        return new Promise((resolve, reject) => {
             connection.rollback(() => {
                 reject(err);
             });
@@ -92,24 +97,27 @@ class TrendiverseDB {
      * @param {boolean} all - 結果が配列の時、要素すべてを返すか
      *     true : 配列全体, false : 最初の要素のみ
      * @param {string[]} arg - 引数の配列
-     * @returns {string | string[]} - 検索結果、またはぞの配列
+     * @returns {Promise} - 検索結果、またはぞの配列を返すPromise
      */
-    async queryp(query_sentence = "", all = false, arg = []) {
-        /** @type {PoolConnection} */
-        let connection;
-        try {
-            connection = await this.#getConnection(this.pool);
-            const res = await this.#query(connection, query_sentence, arg);
-            connection.release();
+    queryp(query_sentence = "", all = false, arg = []) {
+        return new Promise(async (resolve,reject) => {
+            /** @type {PoolConnection} */
+            let connection;
+            try {
+                if(this.pool == undefined) await this.#createPool();
+                connection = await this.#getConnection();
+                const res = await this.#query(connection, query_sentence, arg);
+                connection.release();
 
-            //配列で帰ってきたら
-            if (Array.isArray(res) && !all) return res[0];
-            else return res;
-        } catch (err) {
-            // connection.release();
-            throw err;
-        }
+                //配列で帰ってきたら
+                if (Array.isArray(res) && !all) return res[0];
+                else return resolve(res);
+            } catch (err) {
+                // connection.release();
+                reject(err);
+            }
+        });
     };
 }
 
-export default new TrendiverseDB();
+module.exports = new TrendiverseDB();
