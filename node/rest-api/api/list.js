@@ -21,8 +21,7 @@ module.exports = async function onListRequest(){
 
     const retobj = {
         "google": google_list,
-        "twitter": twitter_list,
-        "test": 1
+        "twitter": twitter_list
     }
 
     return JSON.stringify(retobj);

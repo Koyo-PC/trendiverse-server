@@ -108,9 +108,9 @@ class TrendiverseDB {
                 connection = await this.#getConnection();
                 const res = await this.#query(connection, query_sentence, arg);
                 connection.release();
-
+                
                 //配列で帰ってきたら
-                if (Array.isArray(res) && !all) return res[0];
+                if (Array.isArray(res) && !all) return resolve(res[0]);
                 else return resolve(res);
             } catch (err) {
                 // connection.release();
