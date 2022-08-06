@@ -16,7 +16,7 @@ services:
       - DB_USER
     command: /bin/sh -c "cd /assets/rest-api && npm ci && node index.js"
   mysql:
-    image: mysql:latest
+    image: mysql:5.7
     restart: always
     volumes:
       - ./db_data:/var/lib/mysql
