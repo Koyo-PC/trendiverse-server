@@ -9,17 +9,12 @@ services:
         ipv4_address: 172.30.0.10
     ports:
       - 8080:8080
-      - 8081:8081
     secrets:
       - DB_NAME
       - DB_PASSWORD
       - DB_ROOT_PASSWORD
       - DB_USER
-      - TWITTER_CONSUMER_KEY
-      - TWITTER_CONSUMER_SECRET
-      - TWITTER_ACCESS_TOKEN_KEY
-      - TWITTER_ACCESS_TOKEN_SECRET
-    command: /bin/sh -c "cd /assets/rest-api && npm ci && (node index.js) & cd /assets/twitter_api && npm ci && (node index.js) & wait"
+    command: /bin/sh -c "cd /assets/rest-api && npm ci && node index.js"
   mysql:
     image: mysql:5.7
     restart: always
@@ -41,15 +36,15 @@ services:
       MYSQL_USER_FILE: /run/secrets/DB_USER
       MYSQL_PASSWORD_FILE: /run/secrets/DB_PASSWORD
       TZ: Asia/Tokyo
-  # miniconda:
-  #   image: continuumio/miniconda3:latest
-  #   restart: always
-  #   volumes:
-  #     - ./miniconda:/assets
-  #   networks:
-  #     trendiverse-shared:
-  #       ipv4_address: 172.30.0.12
-  #   command: /bin/bash /assets/setup.sh
+  miniconda:
+    image: continuumio/miniconda3:latest
+    restart: always
+    volumes:
+      - ./miniconda:/assets
+    networks:
+      trendiverse-shared:
+        ipv4_address: 172.30.0.12
+    command: /bin/bash /assets/setup.sh
 
 secrets:
   DB_NAME:
@@ -60,15 +55,6 @@ secrets:
     file: ./secrets/DB_ROOT_PASSWORD.txt
   DB_USER:
     file: ./secrets/DB_USER.txt
-  TWITTER_CONSUMER_KEY:
-    file: ./secrets/TWITTER_CONSUMER_KEY.txt
-  TWITTER_CONSUMER_SECRET:
-    file: ./secrets/TWITTER_CONSUMER_SECRET.txt
-  TWITTER_ACCESS_TOKEN_KEY:
-    file: ./secrets/TWITTER_ACCESS_TOKEN_KEY.txt
-  TWITTER_ACCESS_TOKEN_SECRET:
-    file: ./secrets/TWITTER_ACCESS_TOKEN_SECRET.txt
-  
 
 networks:
   trendiverse-shared:
