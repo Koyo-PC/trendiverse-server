@@ -29,7 +29,6 @@ module.exports = async function onInfoRequest(last_request, name) {
     try{
         if(await DB.tableCheck(`google_${name}`)){
             google_list = await DB.queryp(`select * from google_${name} where date > "${last_request}"`, true);
-            console.log(google_list);
             for(let i=0; i<google_list.length; i++){
                 google_list[i].date = get_date_string(new Date(google_list[i].date));
             }
