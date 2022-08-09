@@ -5,7 +5,7 @@ const DB = require("../db/TrendiverseDB.js");
  * You can create them by executing the commands below.
  * 
  * create table google_list (name varchar(32));
- * create table twitter_list (name varchar(32));
+ * create table twitter_list (id int auto_increment primary key, name varchar(200));
  * 
  * @returns {Promise} You will get {string} when the promise is solved by using "await onListRequest();"
  */

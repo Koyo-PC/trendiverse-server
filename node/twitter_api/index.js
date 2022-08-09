@@ -13,7 +13,8 @@ function main() {
         if (path === "/list") {
             res.writeHead(200, {"content-type": "application/json"});
             const list = await TwitterAPI.onListRequest();
-            res.end(list);
+            const list_string = JSON.stringify({list},undefined,2); //beautiflied
+            res.end(list_string);
         } else {
             res.writeHead(404, {"content-type": "text/plain"});
             res.end("404 Not Found");

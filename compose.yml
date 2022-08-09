@@ -15,10 +15,7 @@ services:
       - DB_PASSWORD
       - DB_ROOT_PASSWORD
       - DB_USER
-      - TWITTER_CONSUMER_KEY
-      - TWITTER_CONSUMER_SECRET
-      - TWITTER_ACCESS_TOKEN_KEY
-      - TWITTER_ACCESS_TOKEN_SECRET
+      - TWITTER_BEARER_TOKEN
     command: /bin/sh -c "cd /assets/rest-api && npm ci && (node index.js) & cd /assets/twitter_api && npm ci && (node index.js) & wait"
   mysql:
     image: mysql:5.7
@@ -60,14 +57,8 @@ secrets:
     file: ./secrets/DB_ROOT_PASSWORD.txt
   DB_USER:
     file: ./secrets/DB_USER.txt
-  TWITTER_CONSUMER_KEY:
-    file: ./secrets/TWITTER_CONSUMER_KEY.txt
-  TWITTER_CONSUMER_SECRET:
-    file: ./secrets/TWITTER_CONSUMER_SECRET.txt
-  TWITTER_ACCESS_TOKEN_KEY:
-    file: ./secrets/TWITTER_ACCESS_TOKEN_KEY.txt
-  TWITTER_ACCESS_TOKEN_SECRET:
-    file: ./secrets/TWITTER_ACCESS_TOKEN_SECRET.txt
+  TWITTER_BEARER_TOKEN:
+    file: ./secrets/TWITTER_BEARER_TOKEN.txt
   
 
 networks:

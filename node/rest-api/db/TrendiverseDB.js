@@ -1,5 +1,6 @@
 const mysql = require("mysql");
 const DockerUtil = require("../dockerUtil.js");
+const utf = require("./utf.js");
 // ↓ 型注釈用
 const Pool = require("mysql/lib/Pool.js");
 // import Connection from "mysql/lib/Connection"
@@ -135,6 +136,24 @@ class TrendiverseDB {
         } catch {
             return false;
         }
+    }
+
+    /**
+     * 
+     * @param {string} str
+     * @returns {string} UTF16 
+     */
+    to_UTF16(str){
+        return utf.array_to_string(utf.encodeUTF16(str));
+    }
+
+    /**
+     * 
+     * @param {string} utf16
+     * @returns {string} normal string
+     */
+    to_STRING(utf){
+        return utf.decodeUTF16(utf.string_to_array(utf));
     }
 }
 
