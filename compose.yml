@@ -38,15 +38,15 @@ services:
       MYSQL_USER_FILE: /run/secrets/DB_USER
       MYSQL_PASSWORD_FILE: /run/secrets/DB_PASSWORD
       TZ: Asia/Tokyo
-  # miniconda:
-  #   image: continuumio/miniconda3:latest
-  #   restart: always
-  #   volumes:
-  #     - ./miniconda:/assets
-  #   networks:
-  #     trendiverse-shared:
-  #       ipv4_address: 172.30.0.12
-  #   command: /bin/bash /assets/setup.sh
+  miniconda:
+    image: continuumio/miniconda3:latest
+    restart: always
+    volumes:
+      - ./miniconda:/assets
+    networks:
+      trendiverse-shared:
+        ipv4_address: 172.30.0.12
+    command: /bin/bash /assets/setup.sh
 
 secrets:
   DB_NAME:
