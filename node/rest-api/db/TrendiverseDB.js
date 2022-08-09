@@ -20,11 +20,8 @@ class TrendiverseDB {
             connectionLimit : 10,
             host: "172.30.0.11",
             port: 3306,
-            user: "root",
-            password: await DockerUtil.getSecret("DB_ROOT_PASSWORD"),
-            // host: DockerUtil.getSecret("DB_HOST"),
-            // user: await DockerUtil.getSecret("DB_USER"),
-            // password: await DockerUtil.getSecret("DB_PASSWORD"),
+            user: await DockerUtil.getSecret("DB_USER"),
+            password: await DockerUtil.getSecret("DB_PASSWORD"),
             database: await DockerUtil.getSecret("DB_NAME"),
         });
     }
