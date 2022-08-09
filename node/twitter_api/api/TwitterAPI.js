@@ -43,7 +43,7 @@ class Twitter {
      * @param {int} id WOEID default:23424856(Japan)
      * @returns {string[]} result 
      */
-    async get_trend(woeId=23424856){
+    async getTrend(woeId=23424856){
         await this.#getClient();
         const params = {
             id: woeId

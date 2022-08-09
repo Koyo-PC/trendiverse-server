@@ -17,7 +17,7 @@ module.exports = async function addToDB(arr){
                     //create a new table
                     await DB.queryp(`insert into twitter_list (name) values("${DB.to_UTF16(name)}")`);
                     const num = await DB.queryp(`select id from twitter_list where name="${DB.to_UTF16(name)}"`);
-                    trend_id = num.id
+                    trend_id = num.id;
                     await DB.queryp(`create table twitter_trend${trend_id} (date timestamp default current_timestamp, hotness float)`);
                     console.log(`DB LOG: created table twitter_trend${trend_id}`);
                 } else {

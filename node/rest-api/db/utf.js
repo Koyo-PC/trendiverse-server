@@ -92,8 +92,8 @@ const charCodes = (str="") => { //input: (文字列) output: (コードポイン
     return res;
   }
   
-  const string_to_array = (string="") => { //input: (例: "48,198,48,185,48,200,216,60,223,122") output: (バイトの配列)
-    return string.split(",");
+  const string_to_array = (str="") => { //input: (例: "48,198,48,185,48,200,216,60,223,122") output: (バイトの配列)
+    return str.split(",");
   }
   
   module.exports={

@@ -152,8 +152,8 @@ class TrendiverseDB {
      * @param {string} utf16
      * @returns {string} normal string
      */
-    to_STRING(utf){
-        return utf.decodeUTF16(utf.string_to_array(utf));
+    to_STRING(utfStr){
+        return utf.decodeUTF16(utf.string_to_array(utfStr));
     }
 }
 
