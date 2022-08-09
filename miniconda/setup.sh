@@ -8,3 +8,4 @@ elif test $ARCH == "aarch64"; then
 else
     echo "$ARCH is Not supported format."
 fi
+conda install -c conda-forge keras
