@@ -3,11 +3,19 @@ const TwitterAPI = require("./api/api.js");
 
 /**
  * Notice that some functions return a promise. You need to wait until it resolves itself.
+ * Please endcode your URL params
  */
 
-function main() {
-    //TO DO: IP制限
+function main() {    
     http.createServer(async (req, res) => {
+        const user_ip = req.socket.remoteAddress;
+        const match = user_ip.match(/172\.30\.0\./);
+        if(match == null){
+            res.writeHead(404, {"content-type": "text/plain"});
+            res.end("404 Not Found");
+            return;
+        }
+
         const url = new URL(req.url, `http://${req.headers.host}`);
         const path = url.pathname;
         const params = url.searchParams;
@@ -28,19 +36,25 @@ function main() {
         } else if (path == "/getDataByName"){
             res.writeHead(200, {"content-type": "application/json"});
             const name = params.get("name");
+            const since = params.get("since");
             /** 
              * example: /getDataByName?name=艦これ
+             * OR
+             * example: /getDataByName?name=艦これ&since=2022-01-01-00-00-00
             */
-            const list = await TwitterAPI.getDataByName(name);
+            const list = await TwitterAPI.getDataByName(name,since);
             const json = JSON.stringify({list},undefined,2); //beautiflied
             res.end(json);
         } else if (path == "/getDataById"){
             res.writeHead(200, {"content-type": "application/json"});
             const id = params.get("id");
+            const since = params.get("since");
             /** 
              * example: /getDataById?id=1
+             * OR
+             * example: /getDataById?id=1&since=2022-01-01-00-00-00
             */
-            const list = await TwitterAPI.getDataById(id);
+            const list = await TwitterAPI.getDataById(id,since);
             const json = JSON.stringify({list},undefined,2); //beautiflied
             res.end(json);
         } else if (path == "/getNameById"){
@@ -57,8 +71,8 @@ function main() {
             /** 
              * example: /getNameById?id=1
             */
-            const string = await TwitterAPI.getList();
-            const json = JSON.stringify(string,undefined,2); //beautiflied
+            const list = await TwitterAPI.getList();
+            const json = JSON.stringify({list},undefined,2); //beautiflied
             res.end(json);
         } else {
             res.writeHead(404, {"content-type": "text/plain"});

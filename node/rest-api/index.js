@@ -7,33 +7,22 @@ const TrendiverseAPI = require("./api/api.js");
 
 function main() {
     http.createServer(async (req, res) => {
+        const user_ip = req.socket.remoteAddress;
+        const match = user_ip.match(/172\.30\.0\./);
+        if(match == null){
+            res.writeHead(404, {"content-type": "text/plain"});
+            res.end("404 Not Found");
+            return;
+        }
+
         const url = new URL(req.url, `http://${req.headers.host}`);
         const path = url.pathname;
         const params = url.searchParams;
-        if (path === "/list") {
+        if (path === "/getList") {
             res.writeHead(200, {"content-type": "application/json"});
-            const list = await TrendiverseAPI.onListRequest();
-            res.end(list);
-        } else if (path === "/info") {
-            /** 
-             * yyyy-MM-dd-HH-mm-ss 
-             * example: /info?name=Hoge&last_request=2022-01-01-00-00-00
-            */
-            const last_request = params.get("last_request");
-            /** String, URL-encoded */
-            const name = params.get("name");
-            if (last_request === null) {
-                res.writeHead(400, {"content-type": "text/plain"});
-                res.end("parameter 'last_request' is required.");
-                return;
-            } else if (name === null) {
-                res.writeHead(400, {"content-type": "text/plain"});
-                res.end("parameter 'name' is required.");
-                return;
-            }
-            res.writeHead(200, {"content-type": "application/json"});
-            const info = await TrendiverseAPI.onInfoRequest(last_request,name);
-            res.end(info);
+            const list = await TrendiverseAPI.getList();
+            const json = JSON.stringify({list},undefined,2); //beautiflied
+            res.end(json);
         } else {
             res.writeHead(404, {"content-type": "text/plain"});
             res.end("404 Not Found");

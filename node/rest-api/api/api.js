@@ -1,7 +1,5 @@
-const onListRequest = require("./list.js");
-const onInfoRequest = require("./info.js");
+const getList = require("./getList.js");
 
 module.exports =  class TrendiverseAPI {
-    static onListRequest = onListRequest;
-    static onInfoRequest = onInfoRequest;
+    static getList = getList;
 }

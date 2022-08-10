@@ -1,0 +1,9 @@
+twitter_listは${DB_NAME}データベースで以下のコマンドを実行して自分で作成してください
+create table twitter_list (id int auto_increment primary key, name varchar(200));
+
+
+--------------------------------------------------------------------------------------------------------------------
+twetter_trend テーブルの作成コマンド(構造明示用)
+create table twitter_trend${trend_id} (date timestamp default current_timestamp, hotness float)
+
+
