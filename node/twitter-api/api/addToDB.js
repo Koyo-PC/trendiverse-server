@@ -19,7 +19,6 @@ module.exports = async function addToDB(arr){
                     const num = await DB.queryp(`select id from twitter_list where name="${DB.to_UTF16(name)}"`);
                     trend_id = num.id;
                     await DB.queryp(`create table twitter_trend${trend_id} (date timestamp default current_timestamp, hotness float)`);
-                    console.log(`DB LOG: created table twitter_trend${trend_id}`);
                 } else {
                     trend_id = res.id;
                 }
@@ -33,9 +32,7 @@ module.exports = async function addToDB(arr){
     };
     
     await Promise.all(promises)
-            .then(()=>{
-                console.log(`DB LOG: successfully added all trend data`)
-            }).catch((e)=>{
+            .catch((e)=>{
                 console.log(e)}
             );
 }
