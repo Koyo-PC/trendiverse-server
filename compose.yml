@@ -10,13 +10,14 @@ services:
     ports:
       - 8080:8080
       - 8081:8081
+      - 8082:8082
     secrets:
       - DB_NAME
       - DB_PASSWORD
       - DB_ROOT_PASSWORD
       - DB_USER
       - TWITTER_BEARER_TOKEN
-    command: /bin/sh -c "cd /assets/rest-api && npm ci && (node index.js) & cd /assets/twitter-api && npm ci && (node index.js) & cd /assets/twitter-api/cron && (node cron.js) & wait"
+    command: /bin/sh -c "cd /assets/rest-api && npm ci && (node index.js) & cd /assets/twitter-api && npm ci && (node index.js) & cd /assets/twitter-api/cron && (node cron.js) & cd /assets/google-api && npm ci && (node index.js) & wait"
   mysql:
     image: mariadb:10.3
     restart: always
