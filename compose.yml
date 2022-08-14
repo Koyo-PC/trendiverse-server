@@ -17,8 +17,8 @@ services:
       - DB_ROOT_PASSWORD
       - DB_USER
       - TWITTER_BEARER_TOKEN
-    command: /bin/sh -c "cd /assets/rest-api && npm ci && (node index.js) & cd /assets/twitter-api && npm ci && (node index.js) & cd /assets/twitter-api/cron && (node cron.js) & cd /assets/google-api && npm ci && (node index.js) & wait"
-  mysql:
+    command: /bin/sh /assets/setup.sh
+  mariadb:
     image: mariadb:10.3
     restart: always
     volumes:
@@ -34,7 +34,7 @@ services:
       - DB_ROOT_PASSWORD
       - DB_USER
     environment:
-      MARIADB_PASSWORD_FILE: /run/secrets/DB_ROOT_PASSWORD
+      MARIADB_ROOT_PASSWORD_FILE: /run/secrets/DB_ROOT_PASSWORD
       MARIADB_DATABASE_FILE: /run/secrets/DB_NAME
       MARIADB_USER_FILE: /run/secrets/DB_USER
       MARIADB_PASSWORD_FILE: /run/secrets/DB_PASSWORD
