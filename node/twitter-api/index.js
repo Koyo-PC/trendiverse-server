@@ -9,46 +9,46 @@ const getDataById = require("./api/getDataById.js");
 
 function main() {    
     http.createServer(async (req, res) => {
-        const user_ip = req.socket.remoteAddress;
-        const match = user_ip.match(/172\.30\.0\./);
-        const match_app = user_ip.match(/138\.2\.55\.39/);
-        if(match == null && match_app == null){
-            res.writeHead(404, {"content-type": "text/plain"});
-            res.end("404 Not Found");
-            return;
-        }
 
         if (req.method == 'POST') {
-            let body = '';
+            const user_ip = req.socket.remoteAddress;
+            const match = user_ip.match(/172\.30\.0\./);
+            if(match == null && match_app == null){
+                res.writeHead(404, {"content-type": "text/plain"});
+                res.end("404 Not Found");
+                return;
+            } else {
+                let body = '';
 
-            req.on('data', function(chunk) {
-                body += chunk;
-            });
-            
-            req.on('end', async function() {
-                try{
-                    const obj = JSON.parse(body);
-                    const id = obj["id"];
-                    const name = obj["name"];
-                    const list = obj["list"];
-                    
-                    if(id != undefined){
-                        //ex. curl -X POST -H "Content-Type: application/json" -d '{ "id": 1, "list": [ {"date":"2022-01-01-00-00-00" ,"hotness": 1234}, {"date":"2022-01-02-00-00-00", "hotness": 5678} ] }' localhost:8081
-                        const ret = await TwitterAPI.addToDB(id,list);
-                        res.end(`${ret}`);
-                    } else if(name != undefined ){
-                        //ex. curl -X POST -H "Content-Type: application/json" -d '{ "name": "台風接近", "list": [ {"date":"2022-01-01-00-00-00" ,"hotness": 1234}, {"date":"2022-01-02-00-00-00", "hotness": 5678} ] }' localhost:8081
-                        const table_id = await TwitterAPI.getIdByName(name);
-                        const ret = await TwitterAPI.addToDB(table_id,list);
-                        res.end(`${ret}`);
-                    } else {
+                req.on('data', function(chunk) {
+                    body += chunk;
+                });
+                
+                req.on('end', async function() {
+                    try{
+                        const obj = JSON.parse(body);
+                        const id = obj["id"];
+                        const name = obj["name"];
+                        const list = obj["list"];
+                        
+                        if(id != undefined){
+                            //ex. curl -X POST -H "Content-Type: application/json" -d '{ "id": 1, "list": [ {"date":"2022-01-01-00-00-00" ,"hotness": 1234}, {"date":"2022-01-02-00-00-00", "hotness": 5678} ] }' localhost:8081
+                            const ret = await TwitterAPI.addToDB(id,list);
+                            res.end(`${ret}`);
+                        } else if(name != undefined ){
+                            //ex. curl -X POST -H "Content-Type: application/json" -d '{ "name": "台風接近", "list": [ {"date":"2022-01-01-00-00-00" ,"hotness": 1234}, {"date":"2022-01-02-00-00-00", "hotness": 5678} ] }' localhost:8081
+                            const table_id = await TwitterAPI.getIdByName(name);
+                            const ret = await TwitterAPI.addToDB(table_id,list);
+                            res.end(`${ret}`);
+                        } else {
+                            res.end("-1");
+                        }
+                        
+                    } catch {
                         res.end("-1");
                     }
-                    
-                } catch {
-                    res.end("-1");
-                }
-            });
+                });
+            }
         }
 
         if(req.method == "GET"){

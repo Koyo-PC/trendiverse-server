@@ -18,7 +18,7 @@ services:
       - DB_USER
       - TWITTER_BEARER_TOKEN
     command: /bin/sh /assets/setup.sh
-  mariadb:
+  mysql:
     image: mariadb:10.3
     restart: always
     volumes:

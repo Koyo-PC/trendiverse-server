@@ -1,5 +1,5 @@
 const http = require("http");
-const googleAPI = require("./api/api.js");
+const GoogleAPI = require("./api/api.js");
 
 /**
  * Notice that some functions return a promise. You need to wait until it resolves itself.
@@ -8,28 +8,46 @@ const googleAPI = require("./api/api.js");
 
 function main() {    
     http.createServer(async (req, res) => {
-        const user_ip = req.socket.remoteAddress;
-        const match = user_ip.match(/172\.30\.0\./);
-        const match_app = user_ip.match(/138\.2\.55\.39/);
-        if(match == null && match_app == null){
-            res.writeHead(404, {"content-type": "text/plain"});
-            res.end("404 Not Found");
-            return;
-        }
-
-        //ex. curl -X POST -H "Content-Type: application/json" -d '{"name":"太郎", "age":"30"}' localhost:8082
+        
         if (req.method == 'POST') {
-            let body = '';
+            const user_ip = req.socket.remoteAddress;
+            const match = user_ip.match(/172\.30\.0\./);
+            if(match == null && match_app == null){
+                res.writeHead(404, {"content-type": "text/plain"});
+                res.end("404 Not Found");
+                return;
+            } else {
+                let body = '';
 
-            req.on('data', function(chunk) {
-                body += chunk;
-            });
-            
-            req.on('end', async function() {
-              console.log(JSON.parse(body)["name"]);
-              res.end("successfully posted");
-              //DB処理
-            });
+                req.on('data', function(chunk) {
+                    body += chunk;
+                });
+                
+                req.on('end', async function() {
+                    try{
+                        const obj = JSON.parse(body);
+                        const id = obj["id"];
+                        const name = obj["name"];
+                        const list = obj["list"];
+                        
+                        if(id != undefined){
+                            //ex. curl -X POST -H "Content-Type: application/json" -d '{ "id": 1, "list": [ {"date":"2022-01-01-00-00-00" ,"hotness": 1234}, {"date":"2022-01-02-00-00-00", "hotness": 5678} ] }' localhost:8082
+                            const ret = await GoogleAPI.addToDB(id,list);
+                            res.end(`${ret}`);
+                        } else if(name != undefined ){
+                            //ex. curl -X POST -H "Content-Type: application/json" -d '{ "name": "台風接近", "list": [ {"date":"2022-01-01-00-00-00" ,"hotness": 1234}, {"date":"2022-01-02-00-00-00", "hotness": 5678} ] }' localhost:8082
+                            const table_id = await GoogleAPI.getIdByName(name);
+                            const ret = await GoogleAPI.addToDB(table_id,list);
+                            res.end(`${ret}`);
+                        } else {
+                            res.end("-1");
+                        }
+                        
+                    } catch {
+                        res.end("-1");
+                    }
+                });
+            }
         }
 
         if(req.method == "GET"){
@@ -41,7 +59,7 @@ function main() {
                  * example: /getDailyTrends?
                 */
                 res.writeHead(200, {"content-type": "application/json"});
-                const list = await googleAPI.getDailyTrends();
+                const list = await GoogleAPI.getDailyTrends();
                 const json = JSON.stringify({list});
                 res.end(json);
             } else if (path === "/getInterestOverTime") {
@@ -53,7 +71,57 @@ function main() {
                 res.writeHead(200, {"content-type": "application/json"});
                 const name = params.get("name");
                 const since = params.get("since");
-                const list = await googleAPI.getInterestOverTime(name,since);
+                const list = await GoogleAPI.getInterestOverTime(name,since);
+                const json = JSON.stringify({list});
+                res.end(json);
+            } else if (path === "/getList") {
+                /** 
+                 * example: /getList?
+                */
+                res.writeHead(200, {"content-type": "application/json"});
+                const list = await GoogleAPI.getList();
+                const json = JSON.stringify({list});
+                res.end(json);
+            } else if (path =="/getIdByName"){
+                res.writeHead(200, {"content-type": "application/json"});
+                const name = params.get("name");
+                /** 
+                 * example: /getIdByName?name=艦これ
+                */
+                const num = await GoogleAPI.getIdByName(name);
+                const json = JSON.stringify(num);
+                res.end(json);
+            } else if (path == "/getNameById"){
+                res.writeHead(200, {"content-type": "application/json"});
+                const id = params.get("id");
+                /** 
+                 * example: /getNameById?id=1
+                */
+                const string = await GoogleAPI.getNameById(id);
+                const json = JSON.stringify(string);
+                res.end(json);
+            } else if (path == "/getAIDataById"){
+                res.writeHead(200, {"content-type": "application/json"});
+                const id = params.get("id");
+                const since = params.get("since");
+                /** 
+                 * example: /getAIDataById?id=1
+                 * OR
+                 * example: /getAIDataById?id=1&since=2022-01-01-00-00-00
+                */
+                const list = await GoogleAPI.getAIDataById(id,since);
+                const json = JSON.stringify({list});
+                res.end(json);
+            } else if (path == "/getAIDataByName"){
+                res.writeHead(200, {"content-type": "application/json"});
+                const name = params.get("name");
+                const since = params.get("since");
+                /** 
+                 * example: /getAIDataByName?name=艦これ
+                 * OR
+                 * example: /getAIDataByName?name=艦これ&since=2022-01-01-00-00-00
+                */
+                const list = await GoogleAPI.getAIDataByName(name,since);
                 const json = JSON.stringify({list});
                 res.end(json);
             } else {

@@ -6,7 +6,7 @@ const DB = require("../../rest-api/db/TrendiverseDB.js");
  * @param {array} arr array of trends
  */
 module.exports = async function addTrendsToDB(arr){
-    const promises = [];
+    let promises = [];
     for (trend of arr){
         const {name, tweet_volume} = trend;
         promises.push(new Promise(async (resolve,reject) => {
@@ -23,7 +23,6 @@ module.exports = async function addTrendsToDB(arr){
                 } else {
                     trend_id = res.id;
                 }
-
                 //存在確認
                 let flag;
                 try {
@@ -32,7 +31,6 @@ module.exports = async function addTrendsToDB(arr){
                 } catch (e){
                     flag = true;
                 }
-
                 //tableない場合
                 if(res == undefined || flag) {
                     await DB.queryp(`create table twitter_trend${trend_id} (date timestamp default current_timestamp, hotness float)`);
@@ -45,10 +43,19 @@ module.exports = async function addTrendsToDB(arr){
                 reject(e);
             };
         }));
+
+        //コネクション不足のため
+        if(promises.length == 10){
+            await Promise.all(promises)
+                .catch((e)=>{
+                    console.log(e)}
+                );
+            promises = [];
+        }
     };
-    
+
     await Promise.all(promises)
-            .catch((e)=>{
-                console.log(e)}
-            );
+        .catch((e)=>{
+            console.log(e)}
+        );
 }

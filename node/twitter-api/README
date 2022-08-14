@@ -7,8 +7,8 @@ GET method:
     getDataById(id) or getDataById(id,since) : twitter table id -> data
     getNameById(id) : twitter table id -> trend name
     getList() : get data in the table "twitter_list"
+    getAIDataById(id) : getAIDataById(id,since) : twitter table id -> AI data
+    getAIDataByName(id) : getAIDataByName(id,since) : trend name -> AI data
 
 POST method:
     addToDB(id,arr) or addToDB(name,arr) : (create a table and) put the data into the table  
-    getAIDataById(id) : getAIDataById(id,since) : twitter table id -> AI data
-    getAIDataByName(id) : getAIDataByName(id,since) : trend name -> AI data

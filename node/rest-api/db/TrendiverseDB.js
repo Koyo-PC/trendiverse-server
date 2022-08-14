@@ -14,7 +14,7 @@ class TrendiverseDB {
         this.pool = undefined;
     }
 
-    async #createPool(){
+    async #getPool(){
         /** @type {Pool} */
         this.pool = mysql.createPool({
             connectionLimit : 10,
@@ -102,7 +102,7 @@ class TrendiverseDB {
             /** @type {PoolConnection} */
             let connection;
             try {
-                if(this.pool == undefined) await this.#createPool();
+                if(this.pool == undefined) await this.#getPool();
                 connection = await this.#getConnection();
                 let res = await this.#query(connection, query_sentence, arg);
                 connection.release();
@@ -113,7 +113,7 @@ class TrendiverseDB {
                     else resolve(res);
                 } else return resolve(res); //not array
             } catch (err) {
-                // connection.release();
+                if(connection != undefined) connection.release();
                 reject(err);
             }
         });

@@ -7,28 +7,28 @@ const TrendiverseAPI = require("./api/api.js");
 
 function main() {
     http.createServer(async (req, res) => {
-        const user_ip = req.socket.remoteAddress;
-        const match = user_ip.match(/172\.30\.0\./);
-        const match_app = user_ip.match(/138\.2\.55\.39/);
-        if(match == null && match_app == null){
-            res.writeHead(404, {"content-type": "text/plain"});
-            res.end("404 Not Found");
-            return;
-        }
 
-        //ex. curl -X POST -H "Content-Type: application/json" -d '{"name":"太郎", "age":"30"}' localhost:8080
         if (req.method == 'POST') {
-            let body = '';
+            const user_ip = req.socket.remoteAddress;
+            const match = user_ip.match(/172\.30\.0\./);
+            if(match == null && match_app == null){
+                res.writeHead(404, {"content-type": "text/plain"});
+                res.end("404 Not Found");
+                return;
+            } else {
 
-            req.on('data', function(chunk) {
-                body += chunk;
-            });
-            
-            req.on('end', async function() {
-              console.log(JSON.parse(body)["name"]);
-              res.end("successfully posted");
-              //DB処理
-            });
+                let body = '';
+
+                req.on('data', function(chunk) {
+                    body += chunk;
+                });
+                
+                req.on('end', async function() {
+                console.log(JSON.parse(body)["name"]);
+                res.end("successfully posted");
+                //DB処理
+                });
+            }
         }
 
         if(req.method == "GET"){ 
