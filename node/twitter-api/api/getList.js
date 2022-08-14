@@ -5,8 +5,9 @@ const DB = require("../../rest-api/db/TrendiverseDB.js");
  * @returns {array} id and name
  */
 module.exports = async function getList(){
+    let data;
     try{
-        const data = await DB.queryp(`select * from twitter_list`,true);
+        data = await DB.queryp(`select * from twitter_list`,true);
         for (trend of data){
             trend["name"] = DB.to_STRING(trend["name"]);
         }

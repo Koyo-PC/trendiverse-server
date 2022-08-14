@@ -1,5 +1,5 @@
 const getIdByName = require("./getIdByName.js");
-const getDataById = require("./getDataById.js");
+const getAIDataById = require("./getAIDataById.js");
 
 /**
  * name -> name(UTF16) -> table_id -> data
@@ -9,5 +9,5 @@ const getDataById = require("./getDataById.js");
  */
 module.exports = async function getDataByName(name,since){
     const id = await getIdByName(name);
-    return await getDataById(id,since);
+    return await getAIDataById(id,since);
 }

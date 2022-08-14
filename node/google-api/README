@@ -1,0 +1,7 @@
+PORT: 8082
+
+GET methods:
+    getDailyTrends() : get daily trends 
+    getInterestOverTime(name) : getInterestOverTime(name,since) : get interest over time (low 0 ~ 1 high)
+
+POST methods:

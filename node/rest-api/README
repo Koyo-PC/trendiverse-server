@@ -1,0 +1,5 @@
+PORT: 8080
+
+GET method:
+    getList() : show all tables
+    getDataById(name) : TABLE name -> data

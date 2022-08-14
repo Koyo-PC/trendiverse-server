@@ -6,8 +6,9 @@ const DB = require("../../rest-api/db/TrendiverseDB.js");
  * @returns {string} name (If the id is not found, "" will be returned.)
  */
 module.exports = async function getNameById(id){
+    let data;
     try {
-        const data = await DB.queryp(`select name from twitter_list where id=${id}`);
+        data = await DB.queryp(`select name from twitter_list where id=${id}`);
     } catch {
         return "";
     }

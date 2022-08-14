@@ -1,11 +1,11 @@
 const Twitter = require('./TwitterAPI.js');
-const addToDB = require('./addToDB.js');
+const addTrendsToDB = require('./addTrendsToDB.js');
 
 /**
  * trend -> DB
  */
 module.exports = async function getTrend(){
     const trends = await Twitter.getTrend();
-    await addToDB(trends);
+    await addTrendsToDB(trends);
     return trends;
 }

@@ -6,9 +6,10 @@ const DB = require("../../rest-api/db/TrendiverseDB.js");
  * @returns {int} table id or -1 (error)
  */
 module.exports = async function getIdByName(name){
+    let res;
     try{
         const utf = DB.to_UTF16(name);
-        const res = await DB.queryp(`select id from twitter_list where name="${utf}"`);
+        res = await DB.queryp(`select id from twitter_list where name="${utf}"`);
     } catch {
         return -1;
     }
