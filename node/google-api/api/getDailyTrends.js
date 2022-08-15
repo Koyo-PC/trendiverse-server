@@ -1,5 +1,7 @@
 const googleTrends = require('google-trends-api');
+const addNamesToDB = require('./addNamesToDB.js');
 
+//一時間おきに更新
 module.exports = async function getDailyTrends(){
     try {
         const res = await googleTrends.dailyTrends({
@@ -12,8 +14,10 @@ module.exports = async function getDailyTrends(){
             const trend = arr[i]["title"]["query"];
             let traffic = arr[i]["formattedTraffic"];
             traffic = Number(traffic.replace(/万\+/,"0000"));
-            ret_arr.push({"trend": trend, "traffic": traffic});
+            ret_arr.push({"name": trend, "traffic": traffic});
         }
+
+        await addNamesToDB(ret_arr);
 
         return ret_arr;
     } catch {

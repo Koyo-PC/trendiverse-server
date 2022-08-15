@@ -25,6 +25,7 @@ function main() {
                 });
                 
                 req.on('end', async function() {
+                    //encodeしなくてOK
                     try{
                         const obj = JSON.parse(body);
                         const id = obj["id"];
@@ -52,6 +53,7 @@ function main() {
         }
 
         if(req.method == "GET"){
+            //encode必要
             const url = new URL(req.url, `http://${req.headers.host}`);
             const path = url.pathname;
             const params = url.searchParams;

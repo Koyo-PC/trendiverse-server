@@ -1,7 +1,7 @@
 const DB = require("../../rest-api/db/TrendiverseDB.js");
 
 /**
- * put data into your DB
+ * put data into your twitter DB
  * If you do not have an appropriate table, it will be created first.
  * @param {array} arr array of trends
  */
@@ -16,7 +16,6 @@ module.exports = async function addTrendsToDB(arr){
 
                 let trend_id;
                 if(res == undefined){ 
-                    //create a new table
                     await DB.queryp(`insert into twitter_list (name) values("${DB.to_UTF16(name)}")`);
                     const num = await DB.queryp(`select id from twitter_list where name="${DB.to_UTF16(name)}"`);
                     trend_id = num.id;

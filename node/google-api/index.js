@@ -8,7 +8,7 @@ const GoogleAPI = require("./api/api.js");
 
 function main() {    
     http.createServer(async (req, res) => {
-        
+
         if (req.method == 'POST') {
             const user_ip = req.socket.remoteAddress;
             const match = user_ip.match(/172\.30\.0\./);
@@ -24,6 +24,7 @@ function main() {
                 });
                 
                 req.on('end', async function() {
+                    //encodeしなくてOK
                     try{
                         const obj = JSON.parse(body);
                         const id = obj["id"];
@@ -36,6 +37,7 @@ function main() {
                             res.end(`${ret}`);
                         } else if(name != undefined ){
                             //ex. curl -X POST -H "Content-Type: application/json" -d '{ "name": "台風接近", "list": [ {"date":"2022-01-01-00-00-00" ,"hotness": 1234}, {"date":"2022-01-02-00-00-00", "hotness": 5678} ] }' localhost:8082
+                            await GoogleAPI.addNamesToDB([{"name":name}]);
                             const table_id = await GoogleAPI.getIdByName(name);
                             const ret = await GoogleAPI.addToDB(table_id,list);
                             res.end(`${ret}`);
@@ -51,6 +53,7 @@ function main() {
         }
 
         if(req.method == "GET"){
+            //encode必要
             const url = new URL(req.url, `http://${req.headers.host}`);
             const path = url.pathname;
             const params = url.searchParams;

@@ -24,14 +24,13 @@ function main() {
                 });
                 
                 req.on('end', async function() {
-                console.log(JSON.parse(body)["name"]);
-                res.end("successfully posted");
-                //DB処理
+                    res.end("successfully posted");
                 });
             }
         }
 
         if(req.method == "GET"){ 
+            //encode必要
             const url = new URL(req.url, `http://${req.headers.host}`);
             const path = url.pathname;
             const params = url.searchParams;

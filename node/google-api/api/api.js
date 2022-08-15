@@ -6,6 +6,7 @@ const getIdByName = require("./getIdByName.js");
 const getNameById = require("./getNameById.js");
 const getAIDataById = require("./getAIDataById.js");
 const getAIDataByName = require("./getAIDataByName.js");
+const addNamesToDB = require("./addNamesToDB.js");
 
 module.exports =  class GoogleAPI {
     static getDailyTrends = getDailyTrends;
@@ -16,4 +17,5 @@ module.exports =  class GoogleAPI {
     static getNameById = getNameById;
     static getAIDataById = getAIDataById;
     static getAIDataByName = getAIDataByName;
+    static addNamesToDB = addNamesToDB;
 }
