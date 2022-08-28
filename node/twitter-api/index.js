@@ -13,7 +13,7 @@ function main() {
         if (req.method == 'POST') {
             const user_ip = req.socket.remoteAddress;
             const match = user_ip.match(/172\.30\.0\./);
-            if(match == null && match_app == null){
+            if(match == null){
                 res.writeHead(404, {"content-type": "text/plain"});
                 res.end("404 Not Found");
                 return;
