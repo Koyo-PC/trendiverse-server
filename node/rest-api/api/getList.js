@@ -10,7 +10,7 @@ module.exports = async function onListRequest(){
     if(tables == undefined) return [];
     let new_tables = [];
     for(table of tables){
-        new_tables.push({"name": `${table["Tables_in_data"]}` });
+        new_tables.push({"name": `${table["Tables_in_db_test"]}` });
     }
     return new_tables;
 }
