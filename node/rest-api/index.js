@@ -36,7 +36,7 @@ function main() {
             const params = url.searchParams;
             if (path === "/getList") {
                 /** 
-                 * example: /getList?
+                 * example: /getList
                 */
                 res.writeHead(200, {"content-type": "application/json"});
                 const list = await TrendiverseAPI.getList();

@@ -1,9 +1,14 @@
-twitter_listは${DB_NAME}データベースで以下のコマンドを実行して自分で作成してください
+仕切り線より上のテーブルに関してはデータベースで以下のコマンドを実行して自分で作成されたし
+
 create table twitter_list (id int auto_increment primary key, name varchar(200));
 
-google_listは${DB_NAME}データベースで以下のコマンドを実行して自分で作成してください
 create table google_list (id int auto_increment primary key, name varchar(200));
 
+twitter 追加記録中リスト twitter_trendIDのみ
+create table twitter_tracking (id int);
+
+twitter 追加記録終了リスト twitter_trendIDのみ
+create table twitter_tracked (id int);
 
 --------------------------------------------------------------------------------------------------------------------
 twetter_trend テーブルの作成コマンド(構造明示用)

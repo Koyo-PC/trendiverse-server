@@ -1,6 +1,5 @@
 const http = require("http");
 const TwitterAPI = require("./api/api.js");
-const getDataById = require("./api/getDataById.js");
 
 /**
  * Notice that some functions return a promise. You need to wait until it resolves itself.

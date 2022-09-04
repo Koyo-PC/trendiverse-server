@@ -4,7 +4,7 @@ const getIdByName = require("./getIdByName.js");
 const getDataById = require("./getDataById.js");
 const getNameById = require("./getNameById.js");
 const getList = require("./getList.js");
-const addToDB = require("./addToDB");
+const addToDB = require("./addToDB.js");
 
 const getAIDataById = require("./getAIDataById.js");
 const getAIDataByName = require("./getAIDataByName.js");

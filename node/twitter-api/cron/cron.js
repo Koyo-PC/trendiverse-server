@@ -15,10 +15,10 @@ function get_date_string(date=new Date()){
 async function main(){
     try {
         await TwitterAPI.getTrend();
-        console.log(get_date_string()+": successfully added all trend data");
+        console.log(get_date_string()+" successfully added all trend data");
         fs.appendFileSync( "./cron.log" , get_date_string()+": successfully added all trend data\n" );
     } catch {
-        console.log(get_date_string()+": failed to add (all / part of) trend data");
+        console.log(get_date_string()+" failed to add (all / part of) trend data");
         fs.appendFileSync( "./cron.log" , get_date_string()+": failed to add (all / part of) trend data\n" );
     }
 }
