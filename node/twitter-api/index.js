@@ -135,6 +135,14 @@ function main() {
                 const list = await TwitterAPI.getAIDataByName(name,since);
                 const json = JSON.stringify({list});
                 res.end(json);
+            } else if (path == "/showTracked"){
+                res.writeHead(200, {"content-type": "application/json"});
+                /** 
+                 * example: /showTracked
+                */
+                const list = await TwitterAPI.showTracked();
+                const json = JSON.stringify({list});
+                res.end(json);
             } else {
                 res.writeHead(404, {"content-type": "text/plain"});
                 res.end("404 Not Found");
