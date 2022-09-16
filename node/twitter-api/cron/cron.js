@@ -23,7 +23,7 @@ async function main(){
     }
 }
 
-cron.schedule('*/6 * * * *', () => {
+cron.schedule('*/10 * * * *', () => {
     main();    
 }, {
     timezone: "Asia/Tokyo"
