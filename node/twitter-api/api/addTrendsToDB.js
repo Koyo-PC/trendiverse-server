@@ -6,6 +6,13 @@ const DB = require("../../rest-api/db/TrendiverseDB.js");
  * @param {array} arr array of trends
  */
 module.exports = async function addTrendsToDB(arr){
+    try{
+        //前回のトレンドリスト削除
+        await DB.queryp(`delete from twitter_current_trends`);
+    } catch {
+        console.log("twitter_current_trends error");
+    }
+
     let promises = [];
     for (trend of arr){
         const {name, tweet_volume} = trend;
@@ -35,6 +42,9 @@ module.exports = async function addTrendsToDB(arr){
                     await DB.queryp(`create table twitter_trend${trend_id} (date timestamp default current_timestamp, hotness float)`);
                 }
 
+                //今のトレンドに追加
+                await DB.queryp(`insert into twitter_current_trends (id, hotness) values(${trend_id}, ${tweet_volume})`);
+                //リストに記録
                 await DB.queryp(`insert into twitter_trend${trend_id} (hotness) values(${tweet_volume})`);
                 resolve();
             } catch(e){

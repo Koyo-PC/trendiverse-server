@@ -1,7 +1,6 @@
 PORT: 8081
 
 GET method:
-    getTrend(): get trend
     getIdByName(name) : trend name -> twitter table id
     getDataByName(id) or getDataByName(id,since) : trend name -> data
     getDataById(id) or getDataById(id,since) : twitter table id -> data
@@ -10,6 +9,7 @@ GET method:
     getAIDataById(id) : getAIDataById(id,since) : twitter table id -> AI data
     getAIDataByName(id) : getAIDataByName(id,since) : trend name -> AI data
     showTracked() : show tracked ids
+    showTrends() : show trends
 
 POST method:
     addToDB(id,arr) or addToDB(name,arr) : (create a table and) put the data into the table  

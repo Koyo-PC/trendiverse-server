@@ -56,12 +56,13 @@ function main() {
             const url = new URL(req.url, `http://${req.headers.host}`);
             const path = url.pathname;
             const params = url.searchParams;
-            if (path === "/getTrend") {
-                res.writeHead(200, {"content-type": "application/json"});
-                const list = await TwitterAPI.getTrend();
-                const json = JSON.stringify({list});
-                res.end(json);
-            } else if (path =="/getIdByName"){
+            // if (path === "/getTrend") {
+            //     res.writeHead(200, {"content-type": "application/json"});
+            //     const list = await TwitterAPI.getTrend();
+            //     const json = JSON.stringify({list});
+            //     res.end(json);
+            // } else 
+            if (path =="/getIdByName"){
                 res.writeHead(200, {"content-type": "application/json"});
                 const name = params.get("name");
                 /** 
@@ -141,6 +142,14 @@ function main() {
                  * example: /showTracked
                 */
                 const list = await TwitterAPI.showTracked();
+                const json = JSON.stringify({list});
+                res.end(json);
+            } else if (path == "/showTrend"){
+                res.writeHead(200, {"content-type": "application/json"});
+                /** 
+                 * example: /showTracked
+                */
+                const list = await TwitterAPI.showTrend();
                 const json = JSON.stringify({list});
                 res.end(json);
             } else {
