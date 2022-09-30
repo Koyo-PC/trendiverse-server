@@ -13,7 +13,7 @@ function main() {
             const user_ip = req.socket.remoteAddress;
             const match = user_ip.match(/172\.30\.0\./);
             if(match == null){
-                res.writeHead(404, {"content-type": "text/plain"});
+                res.writeHead(404, {"content-type": "text/plain; charset=utf-8"});
                 res.end("404 Not Found");
                 return;
             } else {
@@ -32,11 +32,11 @@ function main() {
                         const list = obj["list"];
                         
                         if(id != undefined){
-                            //ex. curl -X POST -H "Content-Type: application/json" -d '{ "id": 1, "list": [ {"date":"2022-01-01-00-00-00" ,"hotness": 1234}, {"date":"2022-01-02-00-00-00", "hotness": 5678} ] }' localhost:8082
+                            //ex. curl -X POST -H "Content-Type: application/json; charset=utf-8" -d '{ "id": 1, "list": [ {"date":"2022-01-01-00-00-00" ,"hotness": 1234}, {"date":"2022-01-02-00-00-00", "hotness": 5678} ] }' localhost:8082
                             const ret = await GoogleAPI.addToDB(id,list);
                             res.end(`${ret}`);
                         } else if(name != undefined ){
-                            //ex. curl -X POST -H "Content-Type: application/json" -d '{ "name": "台風接近", "list": [ {"date":"2022-01-01-00-00-00" ,"hotness": 1234}, {"date":"2022-01-02-00-00-00", "hotness": 5678} ] }' localhost:8082
+                            //ex. curl -X POST -H "Content-Type: application/json; charset=utf-8" -d '{ "name": "台風接近", "list": [ {"date":"2022-01-01-00-00-00" ,"hotness": 1234}, {"date":"2022-01-02-00-00-00", "hotness": 5678} ] }' localhost:8082
                             await GoogleAPI.addNamesToDB([{"name":name}]);
                             const table_id = await GoogleAPI.getIdByName(name);
                             const ret = await GoogleAPI.addToDB(table_id,list);
@@ -61,7 +61,7 @@ function main() {
                 /** 
                  * example: /getDailyTrends?
                 */
-                res.writeHead(200, {"content-type": "application/json"});
+                res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
                 const list = await GoogleAPI.getDailyTrends();
                 const json = JSON.stringify({list});
                 res.end(json);
@@ -71,7 +71,7 @@ function main() {
                  * OR
                  * example: /getInterestOverTime?name=台風接近&since=2022-06-01
                 */
-                res.writeHead(200, {"content-type": "application/json"});
+                res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
                 const name = params.get("name");
                 const since = params.get("since");
                 const list = await GoogleAPI.getInterestOverTime(name,since);
@@ -81,12 +81,12 @@ function main() {
                 /** 
                  * example: /getList?
                 */
-                res.writeHead(200, {"content-type": "application/json"});
+                res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
                 const list = await GoogleAPI.getList();
                 const json = JSON.stringify({list});
                 res.end(json);
             } else if (path =="/getIdByName"){
-                res.writeHead(200, {"content-type": "application/json"});
+                res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
                 const name = params.get("name");
                 /** 
                  * example: /getIdByName?name=艦これ
@@ -95,7 +95,7 @@ function main() {
                 const json = JSON.stringify(num);
                 res.end(json);
             } else if (path == "/getNameById"){
-                res.writeHead(200, {"content-type": "application/json"});
+                res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
                 const id = params.get("id");
                 /** 
                  * example: /getNameById?id=1
@@ -104,7 +104,7 @@ function main() {
                 const json = JSON.stringify(string);
                 res.end(json);
             } else if (path == "/getAIDataById"){
-                res.writeHead(200, {"content-type": "application/json"});
+                res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
                 const id = params.get("id");
                 const since = params.get("since");
                 /** 
@@ -116,7 +116,7 @@ function main() {
                 const json = JSON.stringify({list});
                 res.end(json);
             } else if (path == "/getAIDataByName"){
-                res.writeHead(200, {"content-type": "application/json"});
+                res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
                 const name = params.get("name");
                 const since = params.get("since");
                 /** 
@@ -128,7 +128,7 @@ function main() {
                 const json = JSON.stringify({list});
                 res.end(json);
             } else {
-                res.writeHead(404, {"content-type": "text/plain"});
+                res.writeHead(404, {"content-type": "text/plain; charset=utf-8"});
                 res.end("404 Not Found");
                 return;
             }

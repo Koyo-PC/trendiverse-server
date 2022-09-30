@@ -12,7 +12,7 @@ function main() {
             const user_ip = req.socket.remoteAddress;
             const match = user_ip.match(/172\.30\.0\./);
             if(match == null){
-                res.writeHead(404, {"content-type": "text/plain"});
+                res.writeHead(404, {"content-type": "text/plain; charset=utf-8"});
                 res.end("404 Not Found");
                 return;
             } else {
@@ -38,7 +38,7 @@ function main() {
                 /** 
                  * example: /getList
                 */
-                res.writeHead(200, {"content-type": "application/json"});
+                res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
                 const list = await TrendiverseAPI.getList();
                 const json = JSON.stringify({list});
                 res.end(json);
@@ -46,14 +46,14 @@ function main() {
                 /** 
                  * example: /getDataByName?name=twitter_trend1
                 */
-                res.writeHead(200, {"content-type": "application/json"});
+                res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
                 const name = params.get("name"); //TABLE name
 
                 const list = await TrendiverseAPI.getDataByName(name);
                 const json = JSON.stringify({list},undefined,2);
                 res.end(json);    
             } else {
-                res.writeHead(404, {"content-type": "text/plain"});
+                res.writeHead(404, {"content-type": "text/plain; charset=utf-8"});
                 res.end("404 Not Found");
                 return;
             }
