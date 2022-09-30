@@ -1,3 +1,5 @@
+# docker compose up miniconda
+
 from datetime import datetime
 from typing import List
 import numpy as np
@@ -45,11 +47,11 @@ def predict(X: nparray, start_time: datetime):
     time_axis: List
     fig.add_trace(go.Scatter(x=date, y=prediction, line={'color': '#87cefa'}, name="prediction"))
     fig.add_trace(go.Scatter(x=date, y=X, line={'color': '#90ee90'}, name="so far"))
-    fig.show()
+    fig.write_image("figures/prediction.svg")
 
 
 if __name__ == '__main__':
     new_hotness = np.array(
-        [121, 222, 222, 226, 221, 123, 32, 2]
+        [1117, 1123, 1124, 1123, 1123, 1122, 1122,]
     )
     predict(new_hotness, start_time=convert_datetime("2022-09-04T15:15:01.000Z"))
