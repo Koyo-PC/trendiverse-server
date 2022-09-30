@@ -1,6 +1,6 @@
 # docker compose up miniconda
 
-from datetime import datetime
+import datetime
 from typing import List
 import numpy as np
 import pandas as pd
@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 import requests
 
 
-def predict(X: nparray, start_time: datetime):
+def predict(X: nparray, start_time: datetime.datetime):
     # 最も似ているグラフのidと誤差を得る
     tracked_id: nparray = get_tracked_id()
     original_hotness: List[nparray] = get_tracked_hotness(tracked_id)
@@ -40,11 +40,9 @@ def predict(X: nparray, start_time: datetime):
     r = requests.get(f"http://138.2.55.39:8081/getDataById?id={tracked_id[nearest_id]}")
     date: pd.DataFrame = pd.DataFrame(json.loads(r.text)["list"])["date"].map(convert_datetime)
     timedelta = start_time - date[0]
-    date = date + timedelta
+    date = date + timedelta + datetime.timedelta(hours=9)
 
     print(f"contained datetime: {date[date.size-1]}")
-
-    time_axis: List
     fig.add_trace(go.Scatter(x=date, y=prediction, line={'color': '#87cefa'}, name="prediction"))
     fig.add_trace(go.Scatter(x=date, y=X, line={'color': '#90ee90'}, name="so far"))
     fig.write_image("figures/prediction.svg")
