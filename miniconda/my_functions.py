@@ -1,33 +1,31 @@
 from typing import List, Tuple
 import numpy as np
-import pandas as pd
-import requests
-import json
 from datetime import datetime
+import pickle
 
 nparray = np.ndarray
 
 
 # 追跡が終わったoriginal_idのnumpy配列を返す
 def get_tracked_id() -> nparray:
-    r = requests.get("http://138.2.55.39:8081/showTracked")
-    return np.array(pd.DataFrame(json.loads(r.text)["list"])["id"])
+    tracked_id: List[int]
+    with open("dumped_data/tracked-id.bin", "rb") as p:
+        tracked_id = pickle.load(p)
+    return tracked_id
 
 
 # 追跡が終わったトレンドのhotnessを返す
-def get_tracked_hotness(tracked_id: nparray) -> List[nparray]:
-    n = tracked_id.size
-    hotness = list(range(n))
-    for i in range(n):
-        r = requests.get(f"http://138.2.55.39:8081/getDataById?id={tracked_id[i]}")
-        hotness[i] = pd.DataFrame(json.loads(r.text)["list"])["hotness"]
+def get_tracked_hotness() -> List[nparray]:
+    hotness: List[nparray]
+    with open("dumped_data/hotness_Oct1.bin", "rb") as p:
+        hotness = pickle.load(p)
     return hotness
 
 
 # 1次元nparrayを正規化
 def normalize_array(array: nparray):
-    minimum, maximum = np.min(array), np.max(array)
-    array = (array.astype(np.float64) - minimum) / (maximum - minimum)
+    maximum = np.max(array)
+    array = array.astype(np.float64) / maximum
     return array
 
 

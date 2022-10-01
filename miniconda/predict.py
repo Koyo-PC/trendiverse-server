@@ -13,7 +13,7 @@ import requests
 def predict(X: nparray, start_time: datetime.datetime):
     # 最も似ているグラフのidと誤差を得る
     tracked_id: nparray = get_tracked_id()
-    original_hotness: List[nparray] = get_tracked_hotness(tracked_id)
+    original_hotness: List[nparray] = get_tracked_hotness()
     normalized_hotness: nparray = normalize_hotness(original_hotness)
     usable_id: nparray
     usable_hotness: nparray
@@ -50,6 +50,6 @@ def predict(X: nparray, start_time: datetime.datetime):
 
 if __name__ == '__main__':
     new_hotness = np.array(
-        [1117, 1123, 1124, 1123, 1123, 1122, 1122,]
+        [1117, 1123, 1124, 1123, 1123, 1122, 1122, ]
     )
     predict(new_hotness, start_time=convert_datetime("2022-09-04T15:15:01.000Z"))
