@@ -13,7 +13,7 @@ module.exports = async function addTrendsToDB(arr){
         console.log("twitter_current_trends error");
     }
 
-    let promises = [];
+    let promises = [], id_list = [];
     for (trend of arr){
         const {name, tweet_volume} = trend;
         promises.push(new Promise(async (resolve,reject) => {
@@ -29,6 +29,14 @@ module.exports = async function addTrendsToDB(arr){
                 } else {
                     trend_id = res.id;
                 }
+
+                //重複確認(稀にあるので)
+                if(id_list.includes(trend_id)){
+                    resolve();
+                } else {
+                    id_list.push(trend_id);
+                } 
+
                 //存在確認
                 let flag;
                 try {
