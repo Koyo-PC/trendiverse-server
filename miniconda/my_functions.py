@@ -23,21 +23,19 @@ def get_tracked_hotness() -> List[nparray]:
 
 
 # 1次元nparrayを正規化
-def normalize_array(array: nparray):
+def normalize_array(array: nparray) -> nparray:
     maximum = np.max(array)
-    array = array.astype(np.float64) / maximum
-    return array
+    return array / maximum
 
 
-# 1次元nparrayのListのhotnessを正規化する
-def normalize_hotness(array: List[nparray]) -> np.ndarray:
-    for i in range(len(array)):
-        array[i] = normalize_array(array[i])
-    return array
+# 2次元nparrayを正規化
+def normalize_hotness(array: nparray):
+    maximum = np.max(array, axis=1)
+    return array / maximum[:, np.newaxis]
 
 
-# 使えるデータのidと使えるデータを返す(oldsはhotnessを想定)
-def get_usable(new: nparray, olds: List[nparray]) -> Tuple[nparray, nparray]:
+# 使えるデータのidと使えるデータを返す(oldsはoriginal_hotnessを想定)
+def get_usable(new: nparray, olds: List[nparray]) -> Tuple[List[int], nparray]:
     current_time = new.size
     usable_id = list()
     for i in range(len(olds)):
@@ -49,14 +47,13 @@ def get_usable(new: nparray, olds: List[nparray]) -> Tuple[nparray, nparray]:
     return usable_id, usable_data
 
 
-# 1次元配列と2次元配列のRMSEを返す
-def RMSE(new: nparray, olds: nparray) -> nparray:
-    return np.sqrt(((new - olds) ** 2).mean(axis=1))
-
-
 # 最も近いグラフと誤差を返す
 def get_nearest(new: nparray, usable_olds: nparray) -> Tuple[int, float]:
-    errors = RMSE(new, usable_olds)
+    # 1次元配列と2次元配列のRMSEを返す
+    def RMSE(X: nparray, olds: nparray) -> nparray:
+        return np.sqrt(((X - olds) ** 2).mean(axis=1))
+
+    errors = RMSE(normalize_array(new), normalize_hotness(usable_olds))
     smallest_error_id = np.argmin(errors)
     return smallest_error_id, errors[smallest_error_id]
 
