@@ -4,12 +4,22 @@ import datetime
 from typing import List, Tuple, Dict
 import numpy as np
 import pandas as pd
+import requests
+import json
 from my_functions import nparray, get_tracked_id, get_tracked_hotness, normalize_array, normalize_hotness, get_usable, get_nearest, convert_datetime
 import plotly.graph_objects as go
 import pickle
 
 
-def predict(X: nparray, start_time: datetime.datetime) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
+def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
+    # 入力データを生成
+    r = requests.get(f"http://138.2.55.39:8081/getDataById?id={trend_id}")
+    df = pd.DataFrame(json.loads(r.text)["list"])
+    df["date"] = df["date"].map(convert_datetime)
+    print(df)
+    X = np.array(df["hotness"]).astype(np.float64)
+    start_time = df["date"][0]
+
     # 最も似ているグラフのidと誤差を得る
     tracked_id: nparray = get_tracked_id()
     original_hotness: List[nparray] = get_tracked_hotness()
@@ -42,10 +52,10 @@ def predict(X: nparray, start_time: datetime.datetime) -> Tuple[int, Dict[dateti
     print(f"contained datetime: {date[date.size-1]}")
 
     # 計算結果があってるかの確認用
-    # fig = go.Figure()
-    # fig.add_trace(go.Scatter(x=date, y=prediction, line={'color': '#87cefa'}, name="prediction"))
-    # fig.add_trace(go.Scatter(x=date, y=X, line={'color': '#90ee90'}, name="so far"))
-    # fig.write_html("figures/prediction.html")
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=date, y=prediction, line={'color': '#87cefa'}, name="prediction"))
+    fig.add_trace(go.Scatter(x=date, y=X, line={'color': '#90ee90'}, name="so far"))
+    fig.write_html("figures/prediction.html")
 
     predicted_graph = dict(zip(date.astype(str).values, prediction.tolist()))
     return tracked_id[nearest_id], predicted_graph
@@ -56,4 +66,4 @@ if __name__ == '__main__':
     new_hotness = np.array(
         [1117, 1123, 1124, 1123, 1123, 1122, 1122, ]
     )
-    print(predict(new_hotness, start_time=convert_datetime("2022-09-04T15:15:01.000Z")))
+    print(predict(2728))
