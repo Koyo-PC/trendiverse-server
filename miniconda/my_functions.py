@@ -41,6 +41,8 @@ def get_usable(new: nparray, olds: List[nparray]) -> Tuple[List[int], nparray]:
     for i in range(len(olds)):
         if olds[i].size >= current_time:
             usable_id.append(i)
+    if len(usable_id) == 0:
+        return usable_id, np.array([0])
     usable_data = np.zeros((len(usable_id), current_time))
     for i in range(len(usable_id)):
         usable_data[i] = olds[usable_id[i]][:current_time]
