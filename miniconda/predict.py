@@ -1,7 +1,4 @@
-# docker compose up miniconda
-
 import datetime
-import time
 from typing import List, Tuple, Dict
 import numpy as np
 import pandas as pd
@@ -10,6 +7,38 @@ import json
 from my_functions import nparray, get_tracked_id, get_tracked_hotness, normalize_array, normalize_hotness, get_usable, get_nearest, convert_datetime
 import plotly.graph_objects as go
 import pickle
+import sys
+import urllib.parse
+from http.server import BaseHTTPRequestHandler
+from http.server import HTTPServer
+from http import HTTPStatus
+
+PORT = 8000
+
+
+class StubHttpRequestHandler(BaseHTTPRequestHandler):
+    server_version = "HTTP Stub/0.1"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def do_GET(self):
+        enc = sys.getfilesystemencoding()
+
+        o = urllib.parse.urlparse(self.path)
+        query = urllib.parse.parse_qs(o.query)
+        print(f"QUERY: {query}")
+
+        result = predict(int(query["id"][0]))
+        # encoded = ('{"id": ' + str(result[0]) + ', "data": ' + json.dumps(result[1]) + '}').encode(enc, 'surrogateescape')
+        encoded = ('{"id": ' + str(result[0]) + ', "data": ' + str(pd.DataFrame({"date": result[1].keys(), "hotness": result[1].values()}).to_json(orient="records")) + '}').encode(enc, 'suurogateescape')
+
+        self.send_response(HTTPStatus.OK)
+        self.send_header("Content-type", "text/plain; charset=%s" % enc)
+        self.send_header("Content-Length", str(len(encoded)))
+        self.end_headers()
+
+        self.wfile.write(encoded)
 
 
 def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
@@ -69,7 +98,8 @@ def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
 
 
 if __name__ == '__main__':
-    launch = time.time()
+    print("hoge")
+    handler = StubHttpRequestHandler
+    httpd = HTTPServer(('', PORT), handler)
+    httpd.serve_forever()
     print(predict(2741))
-    end = time.time()
-    print(end - launch)

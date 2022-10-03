@@ -1,6 +1,6 @@
 pip install --upgrade pip
 
-pip install numpy pandas plotly requests kaleido
+pip install numpy pandas plotly requests
 
 #ARCH=`uname -m`
 #if test $ARCH == "x86_64"; then

@@ -46,6 +46,8 @@ services:
     networks:
       trendiverse-shared:
         ipv4_address: 172.30.0.12
+    ports:
+      - 8800:8000
     command: /bin/bash /assets/setup.sh
 
 secrets:
