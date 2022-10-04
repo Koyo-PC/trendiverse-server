@@ -44,6 +44,7 @@
     "punycode": "^2.1.1",
     "qs": "^6.5.3",
     "request": "^2.88.2",
+    "request-promise": "^4.2.6",
     "safe-buffer": "^5.2.1",
     "safer-buffer": "^2.1.2",
     "sshpk": "^1.17.0",
