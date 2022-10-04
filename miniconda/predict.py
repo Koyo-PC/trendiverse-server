@@ -41,7 +41,7 @@ class StubHttpRequestHandler(BaseHTTPRequestHandler):
 
 def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
     # 入力データを生成
-    r = requests.get(f"http://138.2.55.39:8081/getDataById?id={trend_id}")
+    r = requests.get(f"http://172.30.0.10/getDataById?id={trend_id}")
     df = pd.DataFrame(json.loads(r.text)["list"])
     df["date"] = df["date"].map(convert_datetime)
     X = np.array(df["hotness"]).astype(np.float64)
