@@ -7,15 +7,11 @@ const DB = require("../../rest-api/db/TrendiverseDB.js");
  * @returns {array} data (If the table is not found, [] will be returned.)
  */
 module.exports = async function getDataById(id,since){
-    let data;
     if(id == -1) return [];
-    
-    try{
-        if(since == "") data = await DB.queryp(`select * from twitter_trend${id}_ai`,true);
-        else data = await DB.queryp(`select * from twitter_trend${id}_ai where date > "${since}"`,true);
-    } catch{
-        return [];
-    }
+    let data = await request({
+        url: 'http://172.30.0.12:8000/?id=' + id,
+        method: 'GET'
+    });
     if(data == undefined) return [];
     return data;
 }

@@ -17,12 +17,5 @@ module.exports = async function getDataById(id,since){
         return [];
     }
     if(data == undefined) return [];
-    let predict_data = await request({
-        url: 'http://172.30.0.12:8000/?id=' + id,
-        method: 'GET'
-    });
-    console.log(data);
-    data["predict"] = predict_data;
-    console.log(data);
     return data;
 }
