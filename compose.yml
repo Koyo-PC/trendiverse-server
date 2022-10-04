@@ -41,15 +41,17 @@ services:
       TZ: Asia/Tokyo
       MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'yes'
       MARIADB_RANDOM_ROOT_PASSWORD: 'no'
-  # miniconda:
-  #   image: continuumio/miniconda3:latest
-  #   restart: always
-  #   volumes:
-  #     - ./miniconda:/assets
-  #   networks:
-  #     trendiverse-shared:
-  #       ipv4_address: 172.30.0.12
-  #   command: /bin/bash /assets/setup.sh
+  miniconda:
+    image: python:latest
+    restart: always
+    volumes:
+      - ./miniconda:/assets
+    networks:
+      trendiverse-shared:
+        ipv4_address: 172.30.0.12
+    ports:
+      - 8800:8000
+    command: /bin/bash /assets/setup.sh
 
 secrets:
   DB_NAME:
