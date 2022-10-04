@@ -21,6 +21,8 @@ module.exports = async function getDataById(id,since){
         url: 'https://172.30.0.12:8800/?id=' + id,
         method: 'GET'
     });
+    console.log(data);
     data["predict"] = predict_data;
+    console.log(data);
     return data;
 }
