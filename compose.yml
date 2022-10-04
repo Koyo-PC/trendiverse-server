@@ -39,7 +39,7 @@ services:
       MYSQL_PASSWORD_FILE: /run/secrets/DB_PASSWORD
       TZ: Asia/Tokyo
   miniconda:
-    image: continuumio/miniconda3:latest
+    image: python:latest
     restart: always
     volumes:
       - ./miniconda:/assets
