@@ -1,5 +1,5 @@
 const DB = require("../../rest-api/db/TrendiverseDB.js");
-
+const request = require("request-promise");
 /**
  * table_id -> data
  * @param {int} id trend id
@@ -17,5 +17,10 @@ module.exports = async function getDataById(id,since){
         return [];
     }
     if(data == undefined) return [];
+    let predict_data = await request({
+        url: 'https://172.30.0.12:8800/?id=' + id,
+        method: 'GET'
+    });
+    data["predict"] = predict_data;
     return data;
 }
