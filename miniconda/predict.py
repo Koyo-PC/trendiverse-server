@@ -27,10 +27,8 @@ class StubHttpRequestHandler(BaseHTTPRequestHandler):
 
         o = urllib.parse.urlparse(self.path)
         query = urllib.parse.parse_qs(o.query)
-        print(f"QUERY: {query}")
 
         result = predict(int(query["id"][0]))
-        # encoded = ('{"id": ' + str(result[0]) + ', "data": ' + json.dumps(result[1]) + '}').encode(enc, 'surrogateescape')
         encoded = ('{"id": ' + str(result[0]) + ', "data": ' + str(pd.DataFrame({"date": result[1].keys(), "hotness": result[1].values()}).to_json(orient="records")) + '}').encode(enc, 'suurogateescape')
 
         self.send_response(HTTPStatus.OK)
@@ -70,8 +68,6 @@ def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
     current_time = X.size
     prediction[:current_time] = X
     prediction[current_time:] = original_hotness[nearest_id][current_time:]
-    print(X.shape)
-    print(original_hotness[nearest_id].shape)
     scale = (X.sum()) / (original_hotness[nearest_id][:current_time].sum())
     prediction[current_time:] = ((prediction[current_time:] * scale) + prediction[current_time-1]) / 2
     print("==== have predicted all hotness ====")
@@ -98,8 +94,6 @@ def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
 
 
 if __name__ == '__main__':
-    print("hoge")
     handler = StubHttpRequestHandler
     httpd = HTTPServer(('', PORT), handler)
     httpd.serve_forever()
-    print(predict(2741))
