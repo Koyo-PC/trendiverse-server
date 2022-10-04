@@ -1,0 +1,14 @@
+PORT: 8082
+
+GET methods:
+    getDailyTrends() : get daily trends 
+    getInterestOverTime(name) : getInterestOverTime(name,since) : get interest over time (low 0 ~ 1 high)
+    getList() : get data in the table "google_list"
+    getIdByName(name) : trend name -> google table id
+    getNameById(id) : google table id -> trend name
+    getAIDataById(id) : getAIDataById(id,since) : google table id -> AI data
+    getAIDataByName(id) : getAIDataByName(id,since) : trend name -> AI data
+    addNamesToDB([{"name":"艦これ"},{},{},...]) : add names to google_list
+
+POST methods:
+    addToDB(id,arr) or addToDB(name,arr) : (create a table and) put the data into the table  

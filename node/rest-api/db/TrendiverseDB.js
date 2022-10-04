@@ -14,17 +14,14 @@ class TrendiverseDB {
         this.pool = undefined;
     }
 
-    async #createPool(){
+    async #getPool(){
         /** @type {Pool} */
         this.pool = mysql.createPool({
             connectionLimit : 10,
             host: "172.30.0.11",
             port: 3306,
-            user: "root",
-            password: await DockerUtil.getSecret("DB_ROOT_PASSWORD"),
-            // host: DockerUtil.getSecret("DB_HOST"),
-            // user: await DockerUtil.getSecret("DB_USER"),
-            // password: await DockerUtil.getSecret("DB_PASSWORD"),
+            user: await DockerUtil.getSecret("DB_USER"),
+            password: await DockerUtil.getSecret("DB_PASSWORD"),
             database: await DockerUtil.getSecret("DB_NAME"),
         });
     }
@@ -105,7 +102,7 @@ class TrendiverseDB {
             /** @type {PoolConnection} */
             let connection;
             try {
-                if(this.pool == undefined) await this.#createPool();
+                if(this.pool == undefined) await this.#getPool();
                 connection = await this.#getConnection();
                 let res = await this.#query(connection, query_sentence, arg);
                 connection.release();
@@ -116,7 +113,7 @@ class TrendiverseDB {
                     else resolve(res);
                 } else return resolve(res); //not array
             } catch (err) {
-                // connection.release();
+                if(connection != undefined) connection.release();
                 reject(err);
             }
         });
@@ -152,8 +149,8 @@ class TrendiverseDB {
      * @param {string} utf16
      * @returns {string} normal string
      */
-    to_STRING(utf){
-        return utf.decodeUTF16(utf.string_to_array(utf));
+    to_STRING(utfStr){
+        return utf.decodeUTF16(utf.string_to_array(utfStr));
     }
 }
 

@@ -10,15 +10,16 @@ services:
     ports:
       - 8080:8080
       - 8081:8081
+      - 8082:8082
     secrets:
       - DB_NAME
       - DB_PASSWORD
       - DB_ROOT_PASSWORD
       - DB_USER
       - TWITTER_BEARER_TOKEN
-    command: /bin/sh -c "cd /assets/rest-api && npm ci && (node index.js) & cd /assets/twitter_api && npm ci && (node index.js) & wait"
+    command: /bin/sh /assets/setup.sh
   mysql:
-    image: mysql:5.7
+    image: mariadb:10.3
     restart: always
     volumes:
       - ./db_data:/var/lib/mysql
@@ -33,11 +34,13 @@ services:
       - DB_ROOT_PASSWORD
       - DB_USER
     environment:
-      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/DB_ROOT_PASSWORD
-      MYSQL_DATABASE_FILE: /run/secrets/DB_NAME
-      MYSQL_USER_FILE: /run/secrets/DB_USER
-      MYSQL_PASSWORD_FILE: /run/secrets/DB_PASSWORD
+      MARIADB_ROOT_PASSWORD_FILE: /run/secrets/DB_ROOT_PASSWORD
+      MARIADB_DATABASE_FILE: /run/secrets/DB_NAME
+      MARIADB_USER_FILE: /run/secrets/DB_USER
+      MARIADB_PASSWORD_FILE: /run/secrets/DB_PASSWORD
       TZ: Asia/Tokyo
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'yes'
+      MARIADB_RANDOM_ROOT_PASSWORD: 'no'
   miniconda:
     image: python:latest
     restart: always

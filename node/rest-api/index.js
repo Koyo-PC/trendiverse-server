@@ -7,37 +7,56 @@ const TrendiverseAPI = require("./api/api.js");
 
 function main() {
     http.createServer(async (req, res) => {
-        const url = new URL(req.url, `http://${req.headers.host}`);
-        const path = url.pathname;
-        const params = url.searchParams;
-        if (path === "/list") {
-            res.writeHead(200, {"content-type": "application/json"});
-            const list = await TrendiverseAPI.onListRequest();
-            res.end(list);
-        } else if (path === "/info") {
-            /** 
-             * yyyy-MM-dd-HH-mm-ss 
-             * example: /info?name=Hoge&last_request=2022-01-01-00-00-00
-            */
-            const last_request = params.get("last_request");
-            /** String, URL-encoded */
-            const name = params.get("name");
-            if (last_request === null) {
-                res.writeHead(400, {"content-type": "text/plain"});
-                res.end("parameter 'last_request' is required.");
+
+        if (req.method == 'POST') {
+            const user_ip = req.socket.remoteAddress;
+            const match = user_ip.match(/172\.30\.0\./);
+            if(match == null){
+                res.writeHead(404, {"content-type": "text/plain; charset=utf-8"});
+                res.end("404 Not Found");
                 return;
-            } else if (name === null) {
-                res.writeHead(400, {"content-type": "text/plain"});
-                res.end("parameter 'name' is required.");
+            } else {
+
+                let body = '';
+
+                req.on('data', function(chunk) {
+                    body += chunk;
+                });
+                
+                req.on('end', async function() {
+                    res.end("successfully posted");
+                });
+            }
+        }
+
+        if(req.method == "GET"){ 
+            //encode必要
+            const url = new URL(req.url, `http://${req.headers.host}`);
+            const path = url.pathname;
+            const params = url.searchParams;
+            if (path === "/getList") {
+                /** 
+                 * example: /getList
+                */
+                res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
+                const list = await TrendiverseAPI.getList();
+                const json = JSON.stringify({list});
+                res.end(json);
+            } else if (path === "/getDataByName") {
+                /** 
+                 * example: /getDataByName?name=twitter_trend1
+                */
+                res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
+                const name = params.get("name"); //TABLE name
+
+                const list = await TrendiverseAPI.getDataByName(name);
+                const json = JSON.stringify({list},undefined,2);
+                res.end(json);    
+            } else {
+                res.writeHead(404, {"content-type": "text/plain; charset=utf-8"});
+                res.end("404 Not Found");
                 return;
             }
-            res.writeHead(200, {"content-type": "application/json"});
-            const info = await TrendiverseAPI.onInfoRequest(last_request,name);
-            res.end(info);
-        } else {
-            res.writeHead(404, {"content-type": "text/plain"});
-            res.end("404 Not Found");
-            return;
         }
     }).listen(8080);
 }
