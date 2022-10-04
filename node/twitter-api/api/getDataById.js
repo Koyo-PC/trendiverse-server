@@ -1,5 +1,5 @@
 const DB = require("../../rest-api/db/TrendiverseDB.js");
-const request = require("request-promise");
+const request = require("request-promise-native");
 /**
  * table_id -> data
  * @param {int} id trend id
