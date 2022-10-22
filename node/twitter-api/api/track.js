@@ -32,13 +32,30 @@ module.exports = async function track(trend){
 
         //データ追加 & 0.1未満は削除して終了リストに追加
         for(let i=0; i<track_list.length; i++){
-            const num = await Twitter.count(track_list[i]["name"]);
+            const count = await Twitter.count(track_list[i]["name"]);
             const max_obj = await DB.queryp(`select max(hotness) from twitter_trend${track_list[i]["id"]}`);
             const max = max_obj["max(hotness)"];
 
-            await DB.queryp(`insert into twitter_trend${track_list[i]["id"]} (hotness) values(${num})`);
+            //total追加
+            await DB.queryp(`insert into twitter_trend${track_list[i]["id"]} (hotness) values(${count["total"]})`);
 
-            if(num < 0.1 * max){
+            //大昔のトレンドのためにテーブル確認
+            let flag;
+            try {
+                await DB.queryp(`select 1 from twitter_trend_delta${track_list[i]["id"]}`);
+                flag = false;
+            } catch (e){
+                flag = true;
+            }
+            //tableない場合
+            if(flag) {
+                await DB.queryp(`create table twitter_trend_delta${track_list[i]["id"]} (date timestamp default current_timestamp, hotness float)`);
+            }
+
+            //delta追加
+            await DB.queryp(`insert into twitter_trend_delta${track_list[i]["id"]} (hotness) values(${count["delta"]})`);
+
+            if(count["total"] < 0.1 * max){
                 await DB.queryp(`delete from twitter_tracking where id=${track_list[i]["id"]}`);
                 await DB.queryp(`insert into twitter_tracked (id) values(${track_list[i]["id"]})`);
             }
@@ -58,7 +75,7 @@ module.exports = async function track(trend){
         else start = max_trend_id-10;
 
         for(let i=start; i<=max_trend_id; i++){
-            if(tracking_num >= 80) break;
+            if(tracking_num >= 250) break;
             tracking_num++;
             await DB.queryp(`insert into twitter_tracking (id) values(${i})`);
         }

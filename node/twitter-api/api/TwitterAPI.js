@@ -52,18 +52,12 @@ class Twitter {
         const trends = [...ret["data"][0]["trends"]];
         const result = [];
         const promises = [], promise_names = [];
+
         for(const trend of trends){
-            //nameとtweet_volumeだけにする １万未満でnullなら所得  制限注意
-            if(trend["tweet_volume"] == null){
-                promises.push(this.count(trend["name"]));
-                promise_names.push(trend["name"]);
-            } else {
-                result.push({
-                    "name": trend["name"],
-                    "tweet_volume": trend["tweet_volume"]
-                });
-            }
-        };
+            promises.push(this.count(trend["name"]));
+            promise_names.push(trend["name"]);
+        }
+
         const all_res = await Promise.all(promises);
         for(let i = 0; i<promise_names.length; i++){
             result.push({
@@ -77,20 +71,25 @@ class Twitter {
     /**
      * count tweets (total)
      * @param {string} str a string you want to search twitter for
-     * @returns {int} result 
+     * @returns {object} result {total: 過去七日間, delta: 過去一時間} 
      */
     async count(str){
         await this.#getClient();
         const params = {
             query: this.#generate_query(str),
-            granularity: "day"
+            granularity: "minute"
         }
 
         const ret = await this.v2Client.get('tweets/counts/recent', params, { fullResponse: true });
-        const num = Number(ret["data"]["meta"]["total_tweet_count"]);
-        return num;
+        const total = Number(ret["data"]["meta"]["total_tweet_count"]);
+        let delta = 0;
+        for(let i=1; i<=60; i++){ //後ろから60個
+            const arr = ret["data"]["data"];
+            delta += Number(arr[arr.length-i]["tweet_count"]);
+        }
+        return {"total":total, "delta": delta};
     }
-    
+
     /**
      * generate query str
      * @param {string} str a string you want to search twitter for

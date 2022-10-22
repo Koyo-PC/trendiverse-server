@@ -3,7 +3,7 @@ const GoogleAPI = require("./api/api.js");
 
 /**
  * Notice that some functions return a promise. You need to wait until it resolves itself.
- * Please endcode your URL params
+ * Please encode your URL params
  */
 
 function main() {    
