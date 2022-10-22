@@ -7,6 +7,7 @@ const getList = require("./getList.js");
 const addToDB = require("./addToDB.js");
 const showTracked = require("./showTracked.js");
 const showTrend = require("./showTrend.js");
+const showTracking = require("./showTracking.js");
 
 const getAIDataById = require("./getAIDataById.js");
 const getAIDataByName = require("./getAIDataByName.js");
@@ -21,6 +22,7 @@ module.exports =  class TwitterAPI {
     static addToDB = addToDB;
     static showTracked = showTracked;
     static showTrend = showTrend;
+    static showTracking = showTracking;
 
     static getAIDataById = getAIDataById;
     static getAIDataByName = getAIDataByName;

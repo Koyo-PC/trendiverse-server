@@ -152,6 +152,14 @@ function main() {
                 const list = await TwitterAPI.showTrend();
                 const json = JSON.stringify({list});
                 res.end(json);
+            } else if (path == "/showTracking"){
+                res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
+                /** 
+                 * example: /showTracking
+                */
+                const list = await TwitterAPI.showTracking();
+                const json = JSON.stringify({list});
+                res.end(json);
             } else {
                 res.writeHead(404, {"content-type": "text/plain; charset=utf-8"});
                 res.end("404 Not Found");
