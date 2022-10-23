@@ -5,7 +5,7 @@ const DB = require("../db/TrendiverseDB.js");
  * @returns {array} You must resolve this promise to get a result.
  */
 
-module.exports = async function onListRequest(){  
+module.exports = async function getList(){  
     const tables = await DB.queryp("show tables", true);
     if(tables == undefined) return [];
     let new_tables = [];

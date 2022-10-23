@@ -1,7 +1,7 @@
 const DB = require("../../rest-api/db/TrendiverseDB.js");
 
 /**
- * put data into your twitter DB
+ * add data into your twitter DB
  * If you do not have an appropriate table, it will be created first.
  * @param {array} arr array of trends
  */
@@ -29,13 +29,6 @@ module.exports = async function addTrendsToDB(arr){
                 } else {
                     trend_id = res.id;
                 }
-
-                //重複確認(稀にあるので)-----------------------------------------------------------------
-                if(id_list.includes(trend_id)){
-                    resolve();
-                } else {
-                    id_list.push(trend_id);
-                } 
 
                 //今のトレンドに追加----------------------------------------------------------------
                 await DB.queryp(`insert into twitter_current_trends (id, hotness) values(${trend_id}, ${tweet_volume["total"]})`);

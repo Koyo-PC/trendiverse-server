@@ -4,7 +4,7 @@ const getNameById = require('./getNameById.js');
 
 /**
  * track listに入っているもののうちtrend配列に含まれていないものを80trendsまで追加記録
- * 全区間での相対値が0.1未満になればtrackedに入る
+ * 全区間での相対値が0.3未満になればtrackedに入る
  * 
  * trend入ってるか確認->データ追加(->twitter_trackingからtwitter_trackedに移動)->twitter_trakingの空き確認->80まで新規追加
  * 
@@ -30,7 +30,7 @@ module.exports = async function track(trend){
             }
         }
 
-        //データ追加 & 0.1未満は削除して終了リストに追加
+        //データ追加 & 0.3未満は削除して終了リストに追加
         for(let i=0; i<track_list.length; i++){
             const count = await Twitter.count(track_list[i]["name"]);
             const max_obj = await DB.queryp(`select max(hotness) from twitter_trend${track_list[i]["id"]}`);
@@ -55,7 +55,7 @@ module.exports = async function track(trend){
             //delta追加
             await DB.queryp(`insert into twitter_trend_delta${track_list[i]["id"]} (hotness) values(${count["delta"]})`);
 
-            if(count["total"] < 0.1 * max){
+            if(count["total"] < 0.3 * max){
                 await DB.queryp(`delete from twitter_tracking where id=${track_list[i]["id"]}`);
                 await DB.queryp(`insert into twitter_tracked (id) values(${track_list[i]["id"]})`);
             }

@@ -23,18 +23,20 @@ class Twitter {
     /**
      * 
      * @param {string} str a string you want to search twitter for
-     * @returns {string[]} result 
+     * @param {int} num the number of tweets you want to get
+     * @returns {string[]} result (popular, raw)
      */
-    async search(str){
+    async search(str,num=10){
         await this.#getClient();
 
         const params = {
-            max_results: 100,
-            query: this.#generate_query(str),
+            count: num,
+            result_type: "popular",
+            q: this.#generate_query(str),
         }
 
-        const res = await this.v2Client.get('tweets/search/recent', params, { fullResponse: true });
-        const tweets = res["data"]["data"]
+        const res = await this.v1Client.get('search/tweets.json', params, { fullResponse: true });
+        const tweets = res["data"]["statuses"];
         return tweets;
     }
 
@@ -53,7 +55,12 @@ class Twitter {
         const result = [];
         const promises = [], promise_names = [];
 
+        const name_list = [];
         for(const trend of trends){
+            //重複確認(稀にあるので)
+            if(name_list.includes(trend["name"])) continue;
+            else name_list.push(trend["name"]);
+
             promises.push(this.count(trend["name"]));
             promise_names.push(trend["name"]);
         }
@@ -65,6 +72,7 @@ class Twitter {
                 "tweet_volume": all_res[i]
             });
         }
+
         return result;
     }
 

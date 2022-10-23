@@ -1,7 +1,7 @@
 const DB = require("../../rest-api/db/TrendiverseDB.js");
 
 /**
- * put data into your DB
+ * add data into your DB
  * If you do not have an appropriate table, it will be created first.
  * @param {int} id table id
  * @param {array} arr array of trends
@@ -12,7 +12,7 @@ const DB = require("../../rest-api/db/TrendiverseDB.js");
  * ]
  */
 module.exports = async function addToDB(id,arr){
-    if(id == -1) return -1;
+    if(id == -1 || id == null) return -1;
 
     let flag;
     try {

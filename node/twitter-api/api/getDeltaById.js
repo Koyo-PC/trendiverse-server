@@ -7,7 +7,7 @@ const DB = require("../../rest-api/db/TrendiverseDB.js");
  */
 module.exports = async function getDeltaById(id,since){
     let data;
-    if(id == -1) return [];
+    if(id == -1 || id == null) return [];
     
     try{
         if(since == "") data = await DB.queryp(`select * from twitter_trend_delta${id}`,true);

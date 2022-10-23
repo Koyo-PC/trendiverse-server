@@ -6,10 +6,17 @@ GET method:
     getDataById(id) or getDataById(id,since) : twitter table id -> data
     getNameById(id) : twitter table id -> trend name
     getList() : get data in the table "twitter_list"
-    getAIDataById(id) : getAIDataById(id,since) : twitter table id -> AI data
-    getAIDataByName(id) : getAIDataByName(id,since) : trend name -> AI data
+    getAIDataById(id) or getAIDataById(id,since) : twitter table id -> AI data
+    getAIDataByName(id) or getAIDataByName(id,since) : trend name -> AI data
     showTracked() : show tracked ids
-    showTrends() : show trends
+    showTrends() : show current trends
+    showTracking() : show tracking trends
+    getDeltaById(id) : twitter table id -> delta
+    getDeltaByName(name) : twitter table name -> delta
+    getPopularTweetsByName(name) : trend name -> get popular tweets
+    getPopularTweetsById(id) : trend id -> get popular tweets
+    getPopularDataById(id) : get popular tweets(id) by id
+    getPopularDataByName(name) : get popular tweets(id) by name
 
 POST method:
     addToDB(id,arr) or addToDB(name,arr) : (create a table and) put the data into the table  

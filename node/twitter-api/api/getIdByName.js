@@ -6,6 +6,7 @@ const DB = require("../../rest-api/db/TrendiverseDB.js");
  * @returns {int} table id or -1 (error)
  */
 module.exports = async function getIdByName(name){
+    if(name == null) return -1;
     let res;
     try{
         const utf = DB.to_UTF16(name);

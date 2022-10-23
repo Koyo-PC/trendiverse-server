@@ -8,7 +8,7 @@ const request = require("request-promise-native");
  * @returns {array} data (If the table is not found, [] will be returned.)
  */
 module.exports = async function getAIDataById(id,since){
-    if(id == -1) return [];
+    if(id == -1 || id == null) return [];
     let data = await request({
         url: 'http://172.30.0.12:8000/?id=' + id,
         method: 'GET'

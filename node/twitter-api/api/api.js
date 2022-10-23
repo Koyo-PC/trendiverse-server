@@ -10,6 +10,10 @@ const showTrend = require("./showTrend.js");
 const showTracking = require("./showTracking.js");
 const getDeltaById = require("./getDeltaById.js");
 const getDeltaByName = require("./getDeltaByName.js");
+const getPopularTweetsByName = require("./getPopularTweetsByName.js");
+const getPopularTweetsById = require("./getPopularTweetsById.js");
+const getPopularDataById = require("./getPopularDataById.js");
+const getPopularDataByName = require("./getPopularDataByName.js");
 
 const getAIDataById = require("./getAIDataById.js");
 const getAIDataByName = require("./getAIDataByName.js");
@@ -27,6 +31,10 @@ module.exports =  class TwitterAPI {
     static showTracking = showTracking;
     static getDeltaById = getDeltaById;
     static getDeltaByName = getDeltaByName;
+    static getPopularTweetsByName = getPopularTweetsByName;
+    static getPopularTweetsById = getPopularTweetsById;
+    static getPopularDataById = getPopularDataById;
+    static getPopularDataByName = getPopularDataByName;
 
     static getAIDataById = getAIDataById;
     static getAIDataByName = getAIDataByName;
