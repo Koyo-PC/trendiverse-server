@@ -62,25 +62,25 @@ function main() {
             //     const json = JSON.stringify({list});
             //     res.end(json);
             // } else 
-            if (path === "/getPopularTweetsByName") {
-                res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
-                const name = params.get("name");
-                /** 
-                 * example: /getPopularTweetsByName?name=艦これ
-                */
-                const list = await TwitterAPI.getPopularTweetsByName(name);
-                const json = JSON.stringify({list});
-                res.end(json);
-            } else if (path === "/getPopularTweetsById") {
-                res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
-                const id = params.get("id");
-                /** 
-                 * example: /getPopularTweetsById?id=1
-                */
-                const list = await TwitterAPI.getPopularTweetsById(id);
-                const json = JSON.stringify({list});
-                res.end(json);
-            } else 
+            // if (path === "/getPopularTweetsByName") {
+            //     res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
+            //     const name = params.get("name");
+            //     /** 
+            //      * example: /getPopularTweetsByName?name=艦これ
+            //     */
+            //     const list = await TwitterAPI.getPopularTweetsByName(name);
+            //     const json = JSON.stringify({list});
+            //     res.end(json);
+            // } else if (path === "/getPopularTweetsById") {
+            //     res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
+            //     const id = params.get("id");
+            //     /** 
+            //      * example: /getPopularTweetsById?id=1
+            //     */
+            //     const list = await TwitterAPI.getPopularTweetsById(id);
+            //     const json = JSON.stringify({list});
+            //     res.end(json);
+            // } else 
             if (path =="/getIdByName"){
                 res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
                 const name = params.get("name");
