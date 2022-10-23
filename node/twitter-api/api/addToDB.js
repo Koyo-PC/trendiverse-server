@@ -11,7 +11,7 @@ const DB = require("../../rest-api/db/TrendiverseDB.js");
  *  {...}
  * ]
  */
-module.exports = async function addTrendsToDB(id,arr){
+module.exports = async function addToDB(id,arr){
     if(id == -1) return -1;
 
     let flag;

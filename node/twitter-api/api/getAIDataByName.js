@@ -7,7 +7,7 @@ const getAIDataById = require("./getAIDataById.js");
  * @param {string} since yyyy-MM-dd-HH-mm-ss (optional)
  * @returns {array} data (If the table is not found, [] will be returned.)
  */
-module.exports = async function getDataByName(name,since){
+module.exports = async function getAIDataByName(name,since){
     const id = await getIdByName(name);
     return await getAIDataById(id,since);
 }

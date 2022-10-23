@@ -160,6 +160,30 @@ function main() {
                 const list = await TwitterAPI.showTracking();
                 const json = JSON.stringify({list});
                 res.end(json);
+            } else if (path == "/getDeltaById"){
+                res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
+                const id = params.get("id");
+                const since = params.get("since");
+                /** 
+                 * example: /getDeltaById?id=1
+                 * OR
+                 * example: /getDeltaById?id=1&since=2022-01-01-00-00-00
+                */
+                const list = await TwitterAPI.getDeltaById(id,since);
+                const json = JSON.stringify({list});
+                res.end(json);
+            } else if (path == "/getDeltaByName"){
+                res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
+                const name = params.get("name");
+                const since = params.get("since");
+                /** 
+                 * example: /getDeltaByName?name=艦これ
+                 * OR
+                 * example: /getDeltaByName?name=艦これ&since=2022-01-01-00-00-00
+                */
+                const list = await TwitterAPI.getDeltaByName(name,since);
+                const json = JSON.stringify({list});
+                res.end(json);
             } else {
                 res.writeHead(404, {"content-type": "text/plain; charset=utf-8"});
                 res.end("404 Not Found");
