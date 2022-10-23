@@ -30,12 +30,16 @@ module.exports = async function addPopularToDB(arr){
                 } catch (e){
                     flag = true;
                 }
-                //tableない場合 = 未記録の場合
+    
                 if(flag) {
+                    //tableない場合 -> 作成
                     await DB.queryp(`create table twitter_trend_popular${trend_id} (ids varchar(256))`);
-                    //リストに記録
-                    await DB.queryp(`insert into twitter_trend_popular${trend_id} (ids) values("${id_string}")`);
+                } else {
+                    //tableある場合 -> 削除
+                    await DB.queryp(`delete from twitter_trend_popular${trend_id}`);
                 }
+                //リストに記録(更新)
+                await DB.queryp(`insert into twitter_trend_popular${trend_id} (ids) values("${id_string}")`);
 
                 resolve();
             } catch(e){
