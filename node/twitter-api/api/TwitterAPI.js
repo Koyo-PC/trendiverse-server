@@ -5,12 +5,33 @@ class Twitter {
 
     constructor() {
         this.client = undefined;
+        this.token = undefined;
+        this.type = undefined;
     }
 
     async #getClient(){
-        if(this.client != undefined) return;
+        // if(this.client != undefined) return;
 
-        this.client = new TwitterApi(await DockerUtil.getSecret("TWITTER_BEARER_TOKEN"));
+        const min = new Date().getMinutes();
+        if((0 <= min && min < 10) || (20 <= min && min < 30) || (40 <= min && min < 50)){
+            if(this.type == 1) return;
+            else this.type = 1;
+        } else {
+            if(this.type == 2) return;
+            else this.type = 2;
+        }
+        const token = await DockerUtil.getSecret(`TWITTER_BEARER_TOKEN${this.type}`);
+
+        if(token == ""){
+            this.client = undefined;
+            this.roClient = undefined;
+            this.v1Client = undefined;
+            this.v2Client = undefined;
+            console.log("Twitter token is unset. aborted");
+            return;
+        }
+
+        this.client = new TwitterApi(token);
         this.roClient = this.client.readOnly;
 
         /**
@@ -24,10 +45,11 @@ class Twitter {
      * 
      * @param {string} str a string you want to search twitter for
      * @param {int} num the number of tweets you want to get
-     * @returns {string[]} result (popular, raw)
+     * @returns {array} result (popular, raw)
      */
     async search(str,num=10){
         await this.#getClient();
+        if(this.client == undefined) return [];
 
         const params = {
             count: num,
@@ -43,10 +65,12 @@ class Twitter {
     /**
      * 
      * @param {int} id WOEID default:23424856(Japan)
-     * @returns {string[]} result 
+     * @returns {array} result 
      */
     async getTrend(woeId=23424856){
         await this.#getClient();
+        if(this.client == undefined) return [];
+
         const params = {
             id: woeId
         }
@@ -83,6 +107,8 @@ class Twitter {
      */
     async count(str){
         await this.#getClient();
+        if(this.client == undefined) return {};
+
         const params = {
             query: this.#generate_query(str),
             granularity: "minute"

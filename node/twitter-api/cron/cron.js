@@ -23,7 +23,8 @@ async function main(){
     }
 }
 
-cron.schedule('*/20 * * * *', () => {
+// 毎時0,20,40, 10,30,50 分
+cron.schedule('0,10,20,30,40,50 * * * *', () => {
     main();    
 }, {
     timezone: "Asia/Tokyo"

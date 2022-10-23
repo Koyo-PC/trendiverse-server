@@ -9,6 +9,7 @@ const track = require('./track.js');
  */
 module.exports = async function getTrend(){
     const trends = await Twitter.getTrend();
+    if(trends.length == 0) return [];
     await addTrendsToDB(trends);
     await addPopularToDB(trends);
     await track(trends);
