@@ -22,11 +22,11 @@ async function main(){
             token_type = 2;
         }
         await TwitterAPI.getTrend(token_type);
-        console.log(get_date_string()+" successfully added all trend data");
-        fs.appendFileSync( "./cron.log" , get_date_string()+": successfully added all trend data\n" );
+        console.log(get_date_string()+" successfully added all trend data with token" + token_type);
+        fs.appendFileSync( "./cron.log" , get_date_string()+": successfully added all trend data with token" + token_type + "\n" );
     } catch {
-        console.log(get_date_string()+" failed to add (all / part of) trend data");
-        fs.appendFileSync( "./cron.log" , get_date_string()+": failed to add (all / part of) trend data\n" );
+        console.log(get_date_string()+" failed to add (all / part of) trend data with token" + token_type);
+        fs.appendFileSync( "./cron.log" , get_date_string()+": failed to add (all / part of) trend data with token" + token_type + "\n" );
     }
 }
 

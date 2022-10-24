@@ -17,24 +17,25 @@ module.exports = async function track(token_type,trend){
         //リスト確認
         const tracking_obj_raw = await DB.queryp(`select * from twitter_tracking`, true);
         const tracking_ids = [];
-        let tracking_num = tracking_obj_raw.length;
-        let tracking_obj;
+        for(tracking of tracking_obj_raw){
+            tracking_ids.push(tracking["id"]);
+        }
+        let tracking_num = tracking_ids.length;
+        let tracking_sliced;
 
         const min = new Date().getMinutes();
         if((0 <= min && min < 10) || (20 <= min && min < 30) || (40 <= min && min < 50) || tracking_num <= 250){
-            tracking_obj = tracking_obj_raw.slice(0,250);
+            tracking_sliced = tracking_ids.slice(0,250);
         } else {
-            tracking_obj = tracking_obj_raw.slice(250,500);
+            tracking_sliced = tracking_ids.slice(250,500);
         }
 
         //データ追加(トレンドにないもののみ) & 0.3未満は削除して終了リストに追加
         let promises = [];
-        for(tracking of tracking_obj){
+        for(id of tracking_sliced){
             promises.push(new Promise(async (resolve,reject) => {
                 try {
-                    const id = tracking["id"];
                     const name = await getNameById(id);
-                    tracking_ids.push(id);
 
                     let flag1 = false;
                     //トレンドにあるか探す
@@ -44,7 +45,7 @@ module.exports = async function track(token_type,trend){
                             break;
                         }
                     }
-                    if(flag1) resolve();
+                    if(flag1) return resolve();
 
                     const count = await Twitter.count(token_type,name);
                     const max_obj = await DB.queryp(`select max(hotness) from twitter_trend${id}`);
