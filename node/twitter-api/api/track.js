@@ -14,13 +14,16 @@ const getIdByName = require('./getIdByName.js');
 
 module.exports = async function track(token_type,trend){
     try {
+        const tracked_obj = await DB.queryp(`select * from twitter_tracked`, true);
+        for(tracked of tracked_obj){
+            await DB.queryp(`delete from twitter_tracked where id=${tracked["id"]}`); //周期的なもの対策
+            await DB.queryp(`insert into twitter_tracked (id) values(${tracked["id"]})`);
+        }
         //リスト確認
         const tracking_obj_raw = await DB.queryp(`select * from twitter_tracking`, true);
         const tracking_ids = [];
         for(tracking of tracking_obj_raw){
             tracking_ids.push(tracking["id"]);
-            await DB.queryp(`delete from twitter_tracking where id=${tracking["id"]}`); //周期的なもの対策
-            await DB.queryp(`insert into twitter_tracking (id) values(${tracking["id"]})`);
         }
         let tracking_num = tracking_ids.length;
         let tracking_sliced;

@@ -127,6 +127,7 @@ class Twitter {
         let delta = 0;
         for(let i=1; i<=60; i++){ //後ろから60個
             const arr = ret["data"]["data"];
+            if(arr == undefined) break;
             delta += Number(arr[arr.length-i]["tweet_count"]);
         }
         return {"total":total, "delta": delta};
