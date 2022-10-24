@@ -11,13 +11,13 @@ const getIdByName = require('./getIdByName.js');
  */
 module.exports = async function addPopularToDB(token_type,arr){
     let promises = [];
-    for (trend of arr){
+    for (const trend of arr){
         const name = trend["name"];
         promises.push(new Promise(async (resolve,reject) => {
             try {
                 const tweets = await getPopularTweetsByName(token_type,name);
                 let id_string = "";
-                for (tweet of tweets){
+                for (const tweet of tweets){
                     id_string += tweet["id"]+",";
                 }
                 id_string = id_string.slice(0,-1);

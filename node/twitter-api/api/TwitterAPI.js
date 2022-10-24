@@ -24,6 +24,7 @@ class Twitter {
         //     else this.type = 2;
         // }
         if(this.type == token_type) return;
+        console.log("発行");
         const token = await DockerUtil.getSecret(`TWITTER_BEARER_TOKEN${token_type}`);
 
         if(token == ""){

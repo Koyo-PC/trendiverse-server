@@ -8,7 +8,7 @@ module.exports = async function getList(){
     let data;
     try{
         data = await DB.queryp(`select * from twitter_list`,true);
-        for (trend of data){
+        for (const trend of data){
             trend["name"] = DB.to_STRING(trend["name"]);
         }
     } catch {

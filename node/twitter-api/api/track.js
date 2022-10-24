@@ -15,14 +15,15 @@ const getIdByName = require('./getIdByName.js');
 module.exports = async function track(token_type,trend){
     try {
         const tracked_obj = await DB.queryp(`select * from twitter_tracked`, true);
-        for(tracked of tracked_obj){
-            await DB.queryp(`delete from twitter_tracked where id=${tracked["id"]}`); //周期的なもの対策
+        //消して
+        for(const tracked of tracked_obj){
+            await DB.queryp(`delete from twitter_tracked where id=${tracked["id"]}`); //事故対策
             await DB.queryp(`insert into twitter_tracked (id) values(${tracked["id"]})`);
         }
         //リスト確認
         const tracking_obj_raw = await DB.queryp(`select * from twitter_tracking`, true);
         const tracking_ids = [];
-        for(tracking of tracking_obj_raw){
+        for(const tracking of tracking_obj_raw){
             tracking_ids.push(tracking["id"]);
         }
         let tracking_num = tracking_ids.length;
@@ -37,20 +38,24 @@ module.exports = async function track(token_type,trend){
 
         //データ追加(トレンドにないもののみ) & 0.3未満は削除して終了リストに追加
         let promises = [];
-        for(id of tracking_sliced){
+        for(const id of tracking_sliced){
             promises.push(new Promise(async (resolve,reject) => {
                 try {
                     const name = await getNameById(id);
+                    console.log(id,name);
 
                     let flag1 = false;
                     //トレンドにあるか探す
-                    for(trend_data of trend){
+                    for(const trend_data of trend){
                         if(trend_data["name"] == name){
                             flag1 = true;
                             break;
                         }
                     }
-                    if(flag1) return resolve();
+                    if(flag1){
+                        resolve();
+                        return;
+                    }
 
                     const count = await Twitter.count(token_type,name);
                     const max_obj = await DB.queryp(`select max(hotness) from twitter_trend${id}`);
@@ -104,7 +109,7 @@ module.exports = async function track(token_type,trend){
                 );
         
         //トレンド内から新規追加
-        for(trend_data of trend){
+        for(const trend_data of trend){
             const id = await getIdByName(trend_data["name"]);
             if(tracking_ids.includes(id)) continue;
             else if(tracking_num < 500){

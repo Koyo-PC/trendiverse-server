@@ -14,7 +14,7 @@ module.exports = async function addTrendsToDB(arr){
     }
 
     let promises = [];
-    for (trend of arr){
+    for (const trend of arr){
         const {name, tweet_volume} = trend;
         promises.push(new Promise(async (resolve,reject) => {
             try {
