@@ -9,7 +9,7 @@ nparray = np.ndarray
 # 追跡が終わったoriginal_idのnumpy配列を返す
 def get_tracked_id() -> nparray:
     tracked_id: List[int]
-    with open("dumped_data/tracked-id.bin", "rb") as p:
+    with open("dumped_data/tracked_id_Oct1.bin", "rb") as p:
         tracked_id = pickle.load(p)
     return tracked_id
 
