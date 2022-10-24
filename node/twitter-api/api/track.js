@@ -19,6 +19,8 @@ module.exports = async function track(token_type,trend){
         const tracking_ids = [];
         for(tracking of tracking_obj_raw){
             tracking_ids.push(tracking["id"]);
+            await DB.queryp(`delete from twitter_tracking where id=${tracking["id"]}`); //周期的なもの対策
+            await DB.queryp(`insert into twitter_tracking (id) values(${tracking["id"]})`);
         }
         let tracking_num = tracking_ids.length;
         let tracking_sliced;

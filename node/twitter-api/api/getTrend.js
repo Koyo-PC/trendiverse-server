@@ -9,7 +9,6 @@ const track = require('./track.js');
  * @returns {array} trends
  */
 module.exports = async function getTrend(token_type){
-    console.log("called");
     const trends = await Twitter.getTrend(token_type);
     if(trends.length == 0) return [];
     await addTrendsToDB(trends);
