@@ -5,16 +5,17 @@ const getIdByName = require('./getIdByName.js');
 /**
  * add popular tweets(id) into your twitter DB
  * If you do not have an appropriate table, it will be created first.
+ * @param {int} token_type token type
  * @param {array} arr array of trends
- * @param {id} trend_id id of the trend
+ * @param {int} trend_id id of the trend
  */
-module.exports = async function addPopularToDB(arr){
+module.exports = async function addPopularToDB(token_type,arr){
     let promises = [];
     for (trend of arr){
         const name = trend["name"];
         promises.push(new Promise(async (resolve,reject) => {
             try {
-                const tweets = await getPopularTweetsByName(name);
+                const tweets = await getPopularTweetsByName(token_type,name);
                 let id_string = "";
                 for (tweet of tweets){
                     id_string += tweet["id"]+",";
@@ -60,6 +61,6 @@ module.exports = async function addPopularToDB(arr){
 
     await Promise.all(promises)
         .catch((e)=>{
-            console.log(e)}
-        );
+            console.log(e)
+        });
 }

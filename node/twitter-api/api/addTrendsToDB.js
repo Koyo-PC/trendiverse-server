@@ -13,7 +13,7 @@ module.exports = async function addTrendsToDB(arr){
         console.log("twitter_current_trends error");
     }
 
-    let promises = [], id_list = [];
+    let promises = [];
     for (trend of arr){
         const {name, tweet_volume} = trend;
         promises.push(new Promise(async (resolve,reject) => {
@@ -84,6 +84,6 @@ module.exports = async function addTrendsToDB(arr){
 
     await Promise.all(promises)
         .catch((e)=>{
-            console.log(e)}
-        );
+            console.log(e)
+        });
 }

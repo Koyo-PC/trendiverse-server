@@ -14,7 +14,14 @@ function get_date_string(date=new Date()){
 
 async function main(){
     try {
-        await TwitterAPI.getTrend();
+        const min = new Date().getMinutes();
+        let token_type;
+        if((0 <= min && min < 10) || (20 <= min && min < 30) || (40 <= min && min < 50)){
+            token_type = 1;
+        } else {
+            token_type = 2;
+        }
+        await TwitterAPI.getTrend(token_type);
         console.log(get_date_string()+" successfully added all trend data");
         fs.appendFileSync( "./cron.log" , get_date_string()+": successfully added all trend data\n" );
     } catch {

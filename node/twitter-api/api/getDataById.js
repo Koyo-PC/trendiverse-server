@@ -7,7 +7,6 @@ const DB = require("../../rest-api/db/TrendiverseDB.js");
  */
 module.exports = async function getDataById(id,since){
     let data;
-    console.log(id);
     if(id == -1 || id == null) return [];
     
     try{

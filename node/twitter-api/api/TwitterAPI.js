@@ -5,22 +5,26 @@ class Twitter {
 
     constructor() {
         this.client = undefined;
-        this.token = undefined;
         this.type = undefined;
     }
 
-    async #getClient(){
+    /**
+     * 
+     * @param {int} token_type token type (default = 1)
+     */
+    async #getClient(token_type=1){
         // if(this.client != undefined) return;
 
-        const min = new Date().getMinutes();
-        if((0 <= min && min < 10) || (20 <= min && min < 30) || (40 <= min && min < 50)){
-            if(this.type == 1) return;
-            else this.type = 1;
-        } else {
-            if(this.type == 2) return;
-            else this.type = 2;
-        }
-        const token = await DockerUtil.getSecret(`TWITTER_BEARER_TOKEN${this.type}`);
+        // const min = new Date().getMinutes();
+        // if((0 <= min && min < 10) || (20 <= min && min < 30) || (40 <= min && min < 50)){
+        //     if(this.type == 1) return;
+        //     else this.type = 1;
+        // } else {
+        //     if(this.type == 2) return;
+        //     else this.type = 2;
+        // }
+        if(this.type == token_type) return;
+        const token = await DockerUtil.getSecret(`TWITTER_BEARER_TOKEN${token_type}`);
 
         if(token == ""){
             this.client = undefined;
@@ -39,16 +43,18 @@ class Twitter {
          */
         this.v1Client = this.client.v1;
         this.v2Client = this.client.v2;
+        this.type = token_type;
     }
 
     /**
      * 
+     * @param {int} token_type token type
      * @param {string} str a string you want to search twitter for
      * @param {int} num the number of tweets you want to get
      * @returns {array} result (popular, raw)
      */
-    async search(str,num=10){
-        await this.#getClient();
+    async search(token_type,str,num=10){
+        await this.#getClient(token_type);
         if(this.client == undefined) return [];
 
         const params = {
@@ -64,11 +70,12 @@ class Twitter {
 
     /**
      * 
+     * @param {int} token_type token type
      * @param {int} id WOEID default:23424856(Japan)
      * @returns {array} result 
      */
-    async getTrend(woeId=23424856){
-        await this.#getClient();
+    async getTrend(token_type,woeId=23424856){
+        await this.#getClient(token_type);
         if(this.client == undefined) return [];
 
         const params = {
@@ -85,7 +92,7 @@ class Twitter {
             if(name_list.includes(trend["name"])) continue;
             else name_list.push(trend["name"]);
 
-            promises.push(this.count(trend["name"]));
+            promises.push(this.count(token_type,trend["name"]));
             promise_names.push(trend["name"]);
         }
 
@@ -102,11 +109,12 @@ class Twitter {
 
     /**
      * count tweets (total)
+     * @param {int} token_type token type
      * @param {string} str a string you want to search twitter for
      * @returns {object} result {total: 過去七日間, delta: 過去一時間} 
      */
-    async count(str){
-        await this.#getClient();
+    async count(token_type,str){
+        await this.#getClient(token_type);
         if(this.client == undefined) return {};
 
         const params = {
