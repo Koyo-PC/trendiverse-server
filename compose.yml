@@ -18,6 +18,8 @@ services:
       - DB_USER
       - TWITTER_BEARER_TOKEN1
       - TWITTER_BEARER_TOKEN2
+      - TWITTER_BEARER_TOKEN3
+      - TWITTER_BEARER_TOKEN4
     command: /bin/sh /assets/setup.sh
   mysql:
     image: mariadb:10.3
@@ -67,6 +69,10 @@ secrets:
     file: ./secrets/TWITTER_BEARER_TOKEN1.txt
   TWITTER_BEARER_TOKEN2:
     file: ./secrets/TWITTER_BEARER_TOKEN2.txt
+  TWITTER_BEARER_TOKEN3:
+    file: ./secrets/TWITTER_BEARER_TOKEN3.txt
+  TWITTER_BEARER_TOKEN4:
+    file: ./secrets/TWITTER_BEARER_TOKEN4.txt
   
 
 networks:

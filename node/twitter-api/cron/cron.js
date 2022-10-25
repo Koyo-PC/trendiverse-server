@@ -16,10 +16,14 @@ async function main(){
     try {
         const min = new Date().getMinutes();
         let token_type;
-        if((0 <= min && min < 10) || (20 <= min && min < 30) || (40 <= min && min < 50)){
+        if((0 <= min && min < 5) || (20 <= min && min < 25) || (40 <= min && min < 45)){
             token_type = 1;
-        } else {
+        } else if((5 <= min && min < 10) || (25 <= min && min < 30) || (45 <= min && min < 50)){
             token_type = 2;
+        } else if((10 <= min && min < 15) || (30 <= min && min < 35) || (50 <= min && min < 55)){
+            token_type = 3;
+        } else {
+            token_type = 4;
         }
         await TwitterAPI.getTrend(token_type);
         console.log(get_date_string()+" successfully added all trend data with token" + token_type);
@@ -31,7 +35,7 @@ async function main(){
 }
 
 // 毎時0,20,40, 10,30,50 分
-cron.schedule('0,10,20,30,40,50 * * * *', () => {
+cron.schedule('0,20,40,5,25,45,10,30,50,15,35,55 * * * *', () => {
     main();    
 }, {
     timezone: "Asia/Tokyo"

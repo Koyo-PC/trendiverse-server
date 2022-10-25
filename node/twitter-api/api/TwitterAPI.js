@@ -13,18 +13,7 @@ class Twitter {
      * @param {int} token_type token type (default = 1)
      */
     async #getClient(token_type=1){
-        // if(this.client != undefined) return;
-
-        // const min = new Date().getMinutes();
-        // if((0 <= min && min < 10) || (20 <= min && min < 30) || (40 <= min && min < 50)){
-        //     if(this.type == 1) return;
-        //     else this.type = 1;
-        // } else {
-        //     if(this.type == 2) return;
-        //     else this.type = 2;
-        // }
         if(this.type == token_type) return;
-        console.log("発行");
         const token = await DockerUtil.getSecret(`TWITTER_BEARER_TOKEN${token_type}`);
 
         if(token == ""){

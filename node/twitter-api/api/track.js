@@ -14,12 +14,6 @@ const getIdByName = require('./getIdByName.js');
 
 module.exports = async function track(token_type,trend){
     try {
-        const tracked_obj = await DB.queryp(`select * from twitter_tracked`, true);
-        //消して
-        for(const tracked of tracked_obj){
-            await DB.queryp(`delete from twitter_tracked where id=${tracked["id"]}`); //事故対策
-            await DB.queryp(`insert into twitter_tracked (id) values(${tracked["id"]})`);
-        }
         //リスト確認
         const tracking_obj_raw = await DB.queryp(`select * from twitter_tracking`, true);
         const tracking_ids = [];
@@ -30,10 +24,14 @@ module.exports = async function track(token_type,trend){
         let tracking_sliced;
 
         const min = new Date().getMinutes();
-        if((0 <= min && min < 10) || (20 <= min && min < 30) || (40 <= min && min < 50) || tracking_num <= 250){
+        if((0 <= min && min < 5) || (20 <= min && min < 25) || (40 <= min && min < 45) || tracking_num <= 250){
             tracking_sliced = tracking_ids.slice(0,250);
-        } else {
+        } else if((5 <= min && min < 10) || (25 <= min && min < 30) || (45 <= min && min < 50) || tracking_num <= 500){
             tracking_sliced = tracking_ids.slice(250,500);
+        } else if((10 <= min && min < 15) || (30 <= min && min < 35) || (50 <= min && min < 55) || tracking_num <= 750){
+            tracking_sliced = tracking_ids.slice(500,750);
+        } else {
+            tracking_sliced = tracking_ids.slice(750,1000);
         }
 
         //データ追加(トレンドにないもののみ) & 0.3未満は削除して終了リストに追加
@@ -42,7 +40,6 @@ module.exports = async function track(token_type,trend){
             promises.push(new Promise(async (resolve,reject) => {
                 try {
                     const name = await getNameById(id);
-                    console.log(id,name);
 
                     let flag1 = false;
                     //トレンドにあるか探す
@@ -112,7 +109,7 @@ module.exports = async function track(token_type,trend){
         for(const trend_data of trend){
             const id = await getIdByName(trend_data["name"]);
             if(tracking_ids.includes(id)) continue;
-            else if(tracking_num < 500){
+            else if(tracking_num < 1000){
                 tracking_num++;
                 await DB.queryp(`delete from twitter_tracked where id=${id}`); //周期的なもの対策
                 await DB.queryp(`insert into twitter_tracking (id) values(${id})`);
