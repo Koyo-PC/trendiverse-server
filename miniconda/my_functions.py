@@ -1,6 +1,7 @@
 from typing import List, Tuple
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timedelta
+from bisect import bisect
 import pickle
 
 nparray = np.ndarray
@@ -63,3 +64,33 @@ def get_nearest(new: nparray, usable_olds: nparray) -> Tuple[int, float]:
 # 標準の日付表記に直す
 def convert_datetime(date: str):
     return datetime.strptime(date[0:4] + "-" + date[5:7] + "-" + date[8:10] + " " + date[11:16], "%Y-%m-%d %H:%M")
+
+# 全部5分間隔にする
+def make_diff_five(date: List[datetime], hotness: nparray) -> Tuple[List[datetime], nparray]:
+    def get_timedelta_by_minute(datetime0: datetime, datetime1: datetime) -> int:
+        return int((datetime1 - datetime0).total_seconds() / 60)
+
+    start_time: datetime = date[0] + timedelta(minutes=5 - (date[0].minute % 5))
+    end_time: datetime = date[-1] - timedelta(minutes=date[-1].minute % 5)
+
+    # new_dateの作成
+    n: int = int(get_timedelta_by_minute(start_time, end_time) / 5) + 1
+    new_date: List[datetime] = list(range(n))
+    for i in range(n):
+        new_date[i] = start_time + timedelta(minutes=5 * i)
+
+    # new_hotnessの作成
+    def divide_internally(hotness_left: int, hotness_right: int, datetime_left: datetime, datetime_right: datetime, target):
+        p = get_timedelta_by_minute(datetime_left, target)
+        q = get_timedelta_by_minute(target, datetime_right)
+        return (q * hotness_left + p * hotness_right) / (p + q)
+
+    new_hotness: nparray = np.zeros((n,))
+    for i in range(n):
+        if new_date[i] in date:
+            new_hotness[i] = hotness[date.index(new_date[i])]
+        else:
+            index = bisect(date, new_date[i])
+            new_hotness[i] = divide_internally(hotness[index-1], hotness[index], date[index-1], date[index], new_date[i])
+
+    return new_date, new_hotness
