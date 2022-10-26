@@ -6,6 +6,7 @@ import requests
 import json
 from my_functions import nparray, get_tracked_id, get_tracked_hotness, normalize_array, normalize_hotness, get_usable, get_nearest, convert_datetime, make_diff_five
 import plotly.graph_objects as go
+from copy import deepcopy
 import pickle
 import sys
 import urllib.parse
@@ -44,6 +45,7 @@ def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
     r = requests.get(f"http://172.30.0.10/getDataById?id={trend_id}")
     df = pd.DataFrame(json.loads(r.text)["list"])
     df["date"] = df["date"].map(convert_datetime)
+    X_date: List[datetime]
     X: nparray
     X_date, X = make_diff_five(df["date"].tolist(), np.array(df["hotness"]).astype(np.float64))
     start_time = X_date[0]
@@ -54,9 +56,14 @@ def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
     usable_id: nparray
     usable_hotness: nparray
     usable_id, usable_hotness = get_usable(X, original_hotness)
+
+    is_too_long = False
     if len(usable_id) == 0:
-        print("No prediction")
-        return -1, dict()
+        is_too_long = True
+        X_copy = deepcopy(X)
+        X = X_copy[-1000:]
+        usable_id, usable_hotness = get_usable(X, original_hotness)
+
     nearest_id: int
     error: float
     nearest_id, error = get_nearest(X, usable_hotness)
@@ -71,6 +78,10 @@ def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
     prediction[current_time:] = original_hotness[nearest_id][current_time:]
     scale = (X.sum()) / (original_hotness[nearest_id][:current_time].sum())
     prediction[current_time:] = ((prediction[current_time:] * scale) + prediction[current_time-1]) / 2
+    if is_too_long:
+        prediction = np.hstack((X_copy, prediction[current_time:]))
+        print(prediction.size)
+
     print("==== have predicted all hotness ====")
 
     # 各項目出力
@@ -80,15 +91,23 @@ def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
     date: pd.Series
     with open("dumped_data/fivemin_edited_dates_Oct22.bin", "rb") as p:
         date = pd.Series(pickle.load(p)[nearest_id])
-    timedelta = start_time - date[0]
-    date = date + timedelta + datetime.timedelta(hours=9)
-    print(f"contained datetime: {date[date.size-1]}")
+
+    if is_too_long:
+        prediction_date = list(range(prediction.size))
+        prediction_date[:len(X_date)] = X_date
+        timedelta = X_date[-1] - date[999]
+        prediction_date[len(X_date):] = (pd.Series(date[1000:]) + timedelta).to_list()
+        prediction_date = (pd.Series(prediction_date) + datetime.timedelta(hours=9)).to_list()
+    else:
+        timedelta = start_time - date[0]
+        prediction_date = (date + timedelta + datetime.timedelta(hours=9)).to_list()
+    print(f"contained datetime: {prediction_date[len(prediction_date) - 1]}")
 
     # 計算結果があってるかの確認用
     # fig = go.Figure()
-    # fig.add_trace(go.Scatter(x=date, y=prediction, line={'color': '#87cefa'}, name="prediction"))
-    # fig.add_trace(go.Scatter(x=date, y=X, line={'color': '#90ee90'}, name="so far"))
-    # fig.add_trace(go.Scatter(x=date, y=original_hotness[nearest_id], line={'color': '#00008B'}, name="original"))
+    # fig.add_trace(go.Scatter(x=prediction_date, y=prediction, line={'color': '#87cefa'}, name="prediction"))
+    # fig.add_trace(go.Scatter(x=prediction_date, y=X_copy if is_too_long else X, line={'color': '#90ee90'}, name="so far"))
+    # fig.add_trace(go.Scatter(x=prediction_date, y=original_hotness[nearest_id], line={'color': '#00008B'}, name="original"))
     # fig.write_html("figures/prediction.html")
 
     predicted_graph = dict(zip(date.astype(str).values, prediction.tolist()))
