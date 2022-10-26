@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import requests
 import json
-from my_functions import nparray, get_tracked_id, get_tracked_hotness, normalize_array, normalize_hotness, get_usable, get_nearest, convert_datetime
+from my_functions import nparray, get_tracked_id, get_tracked_hotness, normalize_array, normalize_hotness, get_usable, get_nearest, convert_datetime, make_diff_five
 import plotly.graph_objects as go
 import pickle
 import sys
@@ -44,8 +44,9 @@ def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
     r = requests.get(f"http://172.30.0.10/getDataById?id={trend_id}")
     df = pd.DataFrame(json.loads(r.text)["list"])
     df["date"] = df["date"].map(convert_datetime)
-    X = np.array(df["hotness"]).astype(np.float64)
-    start_time = df["date"][0]
+    X: nparray
+    X_date, X = make_diff_five(df["date"].tolist(), np.array(df["hotness"]).astype(np.float64))
+    start_time = X_date[0]
 
     # 最も似ているグラフのidと誤差を得る
     tracked_id: nparray = get_tracked_id()
@@ -63,7 +64,7 @@ def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
     nearest_id = usable_id[nearest_id]
     print("==== have chosen the nearest graph ====")
 
-    # 予測グラフを作成
+    # 予測hotnessを作成
     prediction = np.zeros((original_hotness[nearest_id].size,))
     current_time = X.size
     prediction[:current_time] = X
@@ -91,7 +92,6 @@ def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
 
     predicted_graph = dict(zip(date.astype(str).values, prediction.tolist()))
     return tracked_id[nearest_id], predicted_graph
-
 
 if __name__ == '__main__':
     handler = StubHttpRequestHandler
