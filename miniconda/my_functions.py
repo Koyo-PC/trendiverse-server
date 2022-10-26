@@ -1,8 +1,8 @@
 from typing import List, Tuple
 import numpy as np
 from datetime import datetime, timedelta
-from bisect import bisect
 import pickle
+from bisect import bisect
 
 nparray = np.ndarray
 
@@ -10,7 +10,7 @@ nparray = np.ndarray
 # 追跡が終わったoriginal_idのnumpy配列を返す
 def get_tracked_id() -> nparray:
     tracked_id: List[int]
-    with open("dumped_data/tracked_id_Oct1.bin", "rb") as p:
+    with open("dumped_data/fivemin_edited_tracked_id_Oct22.bin", "rb") as p:
         tracked_id = pickle.load(p)
     return tracked_id
 
@@ -18,7 +18,7 @@ def get_tracked_id() -> nparray:
 # 追跡が終わったトレンドのhotnessを返す
 def get_tracked_hotness() -> List[nparray]:
     hotness: List[nparray]
-    with open("dumped_data/hotness_Oct1.bin", "rb") as p:
+    with open("dumped_data/fivemin_edited_hotness_Oct22.bin", "rb") as p:
         hotness = pickle.load(p)
     return hotness
 

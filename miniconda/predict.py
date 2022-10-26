@@ -76,9 +76,10 @@ def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
     # 各項目出力
     print(f"the nearest trend id: {tracked_id[nearest_id]}")
     print(f"error: {error}")
+
     date: pd.Series
-    with open("dumped_data/dates_Oct1.bin", "rb") as p:
-        date = pd.Series(pickle.load(p)[nearest_id]).map(convert_datetime)
+    with open("dumped_data/fivemin_edited_dates_Oct22.bin", "rb") as p:
+        date = pd.Series(pickle.load(p)[nearest_id])
     timedelta = start_time - date[0]
     date = date + timedelta + datetime.timedelta(hours=9)
     print(f"contained datetime: {date[date.size-1]}")
