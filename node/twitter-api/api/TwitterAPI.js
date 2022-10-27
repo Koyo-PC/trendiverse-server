@@ -21,6 +21,7 @@ class Twitter {
             this.roClient = undefined;
             this.v1Client = undefined;
             this.v2Client = undefined;
+            this.type = token_type;
             console.log("Twitter token is unset. aborted");
             return;
         }
