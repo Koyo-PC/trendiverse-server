@@ -67,6 +67,9 @@ def convert_datetime(date: str):
 
 # 全部5分間隔にする
 def make_diff_five(date: List[datetime], hotness: nparray) -> Tuple[List[datetime], nparray]:
+    if len(date) == 1:
+        return  [date[0] + timedelta(minutes=5 - (date[0].minute % 5))], hotness
+
     def get_timedelta_by_minute(datetime0: datetime, datetime1: datetime) -> int:
         return int((datetime1 - datetime0).total_seconds() / 60)
 
