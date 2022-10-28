@@ -1,3 +1,5 @@
+export OPENBLAS_NUM_THREADS=4
+
 pip install --upgrade pip
 
 pip install numpy pandas plotly requests

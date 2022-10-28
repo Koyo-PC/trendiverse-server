@@ -11,7 +11,7 @@ import pickle
 import sys
 import urllib.parse
 from http.server import BaseHTTPRequestHandler
-from http.server import HTTPServer
+from http.server import ThreadingHTTPServer
 from http import HTTPStatus
 
 PORT = 8000
@@ -33,7 +33,7 @@ class StubHttpRequestHandler(BaseHTTPRequestHandler):
         encoded = ('{"id": ' + str(result[0]) + ', "data": ' + str(pd.DataFrame({"date": result[1].keys(), "hotness": result[1].values()}).to_json(orient="records")) + '}').encode(enc, 'suurogateescape')
 
         self.send_response(HTTPStatus.OK)
-        self.send_header("Content-type", "text/plain; charset=%s" % enc)
+        self.send_header("Content-type", "application/json; charset=%s" % enc)
         self.send_header("Content-Length", str(len(encoded)))
         self.end_headers()
 
@@ -115,5 +115,5 @@ def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
 
 if __name__ == '__main__':
     handler = StubHttpRequestHandler
-    httpd = HTTPServer(('', PORT), handler)
+    httpd = ThreadingHTTPServer(('', PORT), handler)
     httpd.serve_forever()
