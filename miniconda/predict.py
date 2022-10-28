@@ -8,35 +8,20 @@ from my_functions import nparray, get_tracked_id, get_tracked_hotness, normalize
 import plotly.graph_objects as go
 import pickle
 import sys
-import urllib.parse
-from http.server import BaseHTTPRequestHandler
-from http.server import HTTPServer
-from http import HTTPStatus
+from japronto import Application
 
 PORT = 8000
 
+async def request_listener(request):
 
-class StubHttpRequestHandler(BaseHTTPRequestHandler):
-    server_version = "HTTP Stub/0.1"
+    query = request.query
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    result = predict(int(query["id"][0]))
+    encoded = ('{"id": ' + str(result[0]) + ', "data": ' + str(pd.DataFrame({"date": result[1].keys(), "hotness": result[1].values()}).to_json(orient="records")) + '}').encode(enc, 'suurogateescape')
 
-    def do_GET(self):
-        enc = sys.getfilesystemencoding()
-
-        o = urllib.parse.urlparse(self.path)
-        query = urllib.parse.parse_qs(o.query)
-
-        result = predict(int(query["id"][0]))
-        encoded = ('{"id": ' + str(result[0]) + ', "data": ' + str(pd.DataFrame({"date": result[1].keys(), "hotness": result[1].values()}).to_json(orient="records")) + '}').encode(enc, 'suurogateescape')
-
-        self.send_response(HTTPStatus.OK)
-        self.send_header("Content-type", "text/plain; charset=%s" % enc)
-        self.send_header("Content-Length", str(len(encoded)))
-        self.end_headers()
-
-        self.wfile.write(encoded)
+    request.Response(
+        mine_type="application/json",
+        text=encoded)
 
 
 def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
@@ -95,6 +80,6 @@ def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
     return tracked_id[nearest_id], predicted_graph
 
 if __name__ == '__main__':
-    handler = StubHttpRequestHandler
-    httpd = HTTPServer(('', PORT), handler)
-    httpd.serve_forever()
+    web_server = Application()
+    web_server.router.add_route('/', RequestListener)
+    web_server.run(port=PORT, debug=True)
