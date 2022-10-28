@@ -79,7 +79,7 @@ def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
     scale = (X.sum()) / (original_hotness[nearest_id][:current_time].sum())
     prediction[current_time:] = ((prediction[current_time:] * scale) + prediction[current_time-1]) / 2
     if is_too_long:
-        prediction = np.hstack((X_copy, prediction[current_time:]))
+        prediction = np.hstack((X_copy, prediction[1000:]))
         print(prediction.size)
 
     print("==== have predicted all hotness ====")
@@ -110,7 +110,7 @@ def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
     # fig.add_trace(go.Scatter(x=prediction_date, y=original_hotness[nearest_id], line={'color': '#00008B'}, name="original"))
     # fig.write_html("figures/prediction.html")
 
-    predicted_graph = dict(zip(date.astype(str).values, prediction.tolist()))
+    predicted_graph = dict(zip(pd.Series(prediction_date).map(str).to_list(), prediction.tolist()))
     return tracked_id[nearest_id], predicted_graph
 
 if __name__ == '__main__':
