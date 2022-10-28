@@ -1,6 +1,10 @@
 pip install --upgrade pip
 
-python3 -m pip install numpy pandas plotly requests japronto
+pip install numpy
+pip install pandas
+pip install plotly
+pip install requests
+pip install japronto
 
 #ARCH=`uname -m`
 #if test $ARCH == "x86_64"; then
