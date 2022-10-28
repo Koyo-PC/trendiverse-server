@@ -1,10 +1,6 @@
 pip install --upgrade pip
 
-pip install numpy
-pip install pandas
-pip install plotly
-pip install requests
-pip install japronto
+pip install numpy pandas plotly requests https://github.com/squeaky-pl/japronto/archive/master.zip
 
 #ARCH=`uname -m`
 #if test $ARCH == "x86_64"; then
