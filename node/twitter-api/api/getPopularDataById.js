@@ -18,7 +18,7 @@ module.exports = async function getPopularDataById(id){
     if(data["ids"] == "") return [];
     const ret = data["ids"].split(",");
     for(let i=0; i<ret.length; i++){
-        ret[i] = Number(ret[i]);
+        ret[i] = ret[i];
     }
     return ret;
 }
