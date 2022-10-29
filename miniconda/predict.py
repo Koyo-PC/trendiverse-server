@@ -103,6 +103,8 @@ def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
         prediction_date = (date + timedelta + datetime.timedelta(hours=9)).to_list()
     print(f"contained datetime: {prediction_date[len(prediction_date) - 1]}")
 
+    prediction = prediction.astype(int)
+
     # 計算結果があってるかの確認用
     # fig = go.Figure()
     # fig.add_trace(go.Scatter(x=prediction_date, y=prediction, line={'color': '#87cefa'}, name="prediction"))
