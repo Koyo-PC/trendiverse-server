@@ -10,7 +10,7 @@ module.exports = async function getPopularTweetsByName(token_type,name){
     const tweets = await Twitter.search(token_type,name,10);
     const ret = [];
     for(const tweet of tweets){
-        ret.push({"id": tweet.id, "fav": tweet.favorite_count});
+        ret.push({"id": tweet.id_str, "fav": tweet.favorite_count});
     }
     ret.sort((a,b)=>{
        return b.fav - a.fav; 
