@@ -96,10 +96,18 @@ def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
 if __name__ == '__main__':
     while True:
         start = time.time()
-        req = requests.get(f"http://172.30.0.10:8081/showTracking")
-        df = pd.DataFrame(json.loads(req.text)["list"])
+        ids = []
+
+        req_tracking = requests.get(f"http://172.30.0.10:8081/showTracking")
+        df_tracking = pd.DataFrame(json.loads(req_tracking.text)["list"])
+        for index, data in df_tracking.iterrows():
+            ids.append(int(data["id"]))
+        req_trend = requests.get(f"http://172.30.0.10:8081/showTrend")
+        df_trend = pd.DataFrame(json.loads(req_trend.text)["list"])
         for index, data in df.iterrows():
-            # id = int(data["id"])
+            if int(data["id"]) in ids:
+                ids.append(int(data["id"]))
+        for id in ids:
             result = predict(id)
             encoded = '{"id": ' + str(result[0]) + ', "data": ' + str(pd.DataFrame({"date": result[1].keys(), "hotness": result[1].values()}).to_json(orient="records")) + '}'
             with open("/ai_share/" + str(id) + ".json", mode='w') as f:
