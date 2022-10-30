@@ -29,8 +29,16 @@ class StubHttpRequestHandler(BaseHTTPRequestHandler):
         o = urllib.parse.urlparse(self.path)
         query = urllib.parse.parse_qs(o.query)
 
-        result = predict(int(query["id"][0]))
-        encoded = ('{"id": ' + str(result[0]) + ', "data": ' + str(pd.DataFrame({"date": result[1].keys(), "hotness": result[1].values()}).to_json(orient="records")) + '}').encode(enc, 'suurogateescape')
+        id = int(query["id"][0])
+
+        str_result = ""
+        if os.path.isfile("/ai_share/" + str(id) + ".json"):
+            with open("/ai_share/" + str(id) + ".json", mode='r') as f:
+                str_result = f.read()
+        else:
+            result = getData(id)
+            str_result ='{"id": ' + str(result[0]) + ', "data": ' + str(pd.DataFrame({"date": result[1].keys(), "hotness": result[1].values()}).to_json(orient="records")) + '}'
+        encoded = str_result.encode(enc, 'suurogateescape')
 
         self.send_response(HTTPStatus.OK)
         self.send_header("Content-type", "application/json; charset=%s" % enc)
@@ -40,7 +48,9 @@ class StubHttpRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(encoded)
 
 
-def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
+# ↓↓↓ この関数変えてほしい〜〜〜〜〜
+
+def getData(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
     # 入力データを生成
     r = requests.get(f"http://172.30.0.10:8081/getDataById?id={trend_id}")
     df = pd.DataFrame(json.loads(r.text)["list"])
