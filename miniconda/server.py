@@ -56,7 +56,7 @@ def getData(trend_id: int) -> Tuple[int, Dict[str, int]]:
     df = pd.DataFrame(json.loads(r.text)["list"])
     df["date"] = df["date"].map(convert_datetime)
     date, hotness = make_diff_five(df["date"].tolist(), np.array(df["hotness"]).astype(np.float64))
-    date = pd.Series(hotness).map(str).to_list()
+    date = pd.Series(date).map(str).to_list()
     hotness = hotness.astype(int).tolist()
     return trend_id, dict(zip(date, hotness))
 
