@@ -9,7 +9,7 @@ GET method:
     getAIDataById(id) or getAIDataById(id,since) : twitter table id -> AI data
     getAIDataByName(id) or getAIDataByName(id,since) : trend name -> AI data
     showTracked() : show tracked ids
-    showTrends() : show current trends
+    showTrends(date) : show current trends / show trends on a specific day
     showTracking() : show tracking trends
     getDeltaById(id) : twitter table id -> delta
     getDeltaByName(name) : twitter table name -> delta

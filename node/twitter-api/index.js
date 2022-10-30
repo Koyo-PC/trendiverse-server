@@ -165,10 +165,11 @@ function main() {
                 res.end(json);
             } else if (path == "/showTrend"){
                 res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
+                const date = params.get("date");
                 /** 
-                 * example: /showTracked
+                 * example: /showTrend
                 */
-                const list = await TwitterAPI.showTrend();
+                const list = await TwitterAPI.showTrend(date);
                 const json = JSON.stringify({list});
                 res.end(json);
             } else if (path == "/showTracking"){
