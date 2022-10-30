@@ -97,7 +97,7 @@ if __name__ == '__main__':
     while True:
         start = time.time()
         req = requests.get(f"http://172.30.0.10:8081/showTrend")
-        df = pd.DataFrame(json.loads(r.text)["list"])
+        df = pd.DataFrame(json.loads(req.text)["list"])
         for data in df:
             id = int(data["id"])
             result = predict(id)
