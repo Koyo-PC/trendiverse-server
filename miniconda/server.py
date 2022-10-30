@@ -13,9 +13,31 @@ import urllib.parse
 from http.server import BaseHTTPRequestHandler
 from http.server import ThreadingHTTPServer
 from http import HTTPStatus
-import time
 
 PORT = 8000
+
+
+class StubHttpRequestHandler(BaseHTTPRequestHandler):
+    server_version = "HTTP Stub/0.1"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def do_GET(self):
+        enc = sys.getfilesystemencoding()
+
+        o = urllib.parse.urlparse(self.path)
+        query = urllib.parse.parse_qs(o.query)
+
+        result = predict(int(query["id"][0]))
+        encoded = ('{"id": ' + str(result[0]) + ', "data": ' + str(pd.DataFrame({"date": result[1].keys(), "hotness": result[1].values()}).to_json(orient="records")) + '}').encode(enc, 'suurogateescape')
+
+        self.send_response(HTTPStatus.OK)
+        self.send_header("Content-type", "application/json; charset=%s" % enc)
+        self.send_header("Content-Length", str(len(encoded)))
+        self.end_headers()
+
+        self.wfile.write(encoded)
 
 
 def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
@@ -94,15 +116,6 @@ def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
     return tracked_id[nearest_id], predicted_graph
 
 if __name__ == '__main__':
-    while True:
-        start = time.time()
-        req = requests.get(f"http://172.30.0.10:8081/showTrend")
-        df = pd.DataFrame(json.loads(r.text)["list"])
-        for data in df:
-            id = int(data["id"])
-            result = predict(id)
-            encoded = ('{"id": ' + str(result[0]) + ', "data": ' + str(pd.DataFrame({"date": result[1].keys(), "hotness": result[1].values()}).to_json(orient="records")) + '}').encode(enc, 'suurogateescape')
-            with open("/ai_share/" + str(id) + ".json", mode='w') as f:
-                f.write(encoded)
-        print("time = " + (time.time() - start), flush=True)
-        time.sleep(300 - (time.time() - start))
+    handler = StubHttpRequestHandler
+    httpd = ThreadingHTTPServer(('', PORT), handler)
+    httpd.serve_forever()

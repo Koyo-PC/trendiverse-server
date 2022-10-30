@@ -49,6 +49,7 @@ services:
     restart: always
     volumes:
       - ./miniconda:/assets
+      - ./ai_share:/ai_share
     networks:
       trendiverse-shared:
         ipv4_address: 172.30.0.12
