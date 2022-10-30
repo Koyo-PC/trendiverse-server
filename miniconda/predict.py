@@ -104,7 +104,7 @@ if __name__ == '__main__':
             ids.append(int(data["id"]))
         req_trend = requests.get(f"http://172.30.0.10:8081/showTrend")
         df_trend = pd.DataFrame(json.loads(req_trend.text)["list"])
-        for index, data in df.iterrows():
+        for index, data in df_trend.iterrows():
             if int(data["id"]) in ids:
                 ids.append(int(data["id"]))
         for id in ids:
