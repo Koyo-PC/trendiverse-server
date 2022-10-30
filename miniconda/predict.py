@@ -18,7 +18,7 @@ import time
 PORT = 8000
 
 
-def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
+def predict(trend_id: int) -> Tuple[int, Dict[str, int]]:
     # 入力データを生成
     r = requests.get(f"http://172.30.0.10:8081/getDataById?id={trend_id}")
     df = pd.DataFrame(json.loads(r.text)["list"])
