@@ -38,6 +38,11 @@ class StubHttpRequestHandler(BaseHTTPRequestHandler):
                 str_result = f.read()
         else:
             result = getData(id)
+            if(result == None):
+                self.send_response(HTTPStatus.NOT_FOUND)
+                self.end_headers()
+                self.wfile.write("Trend Not Found")
+                return
             str_result ='{"id": ' + str(result[0]) + ', "data": ' + str(pd.DataFrame({"date": result[1].keys(), "hotness": result[1].values()}).to_json(orient="records")) + '}'
         encoded = str_result.encode(enc, 'suurogateescape')
 
@@ -51,9 +56,11 @@ class StubHttpRequestHandler(BaseHTTPRequestHandler):
 
 # ↓↓↓ この関数変えてほしい〜〜〜〜〜
 
-def getData(trend_id: int) -> Tuple[int, Dict[str, int]]:
+def getData(trend_id: int) -> Tuple[int, Dict[str, int]] | None:
     r = requests.get(f"http://172.30.0.10:8081/getDataById?id={trend_id}")
-    df = pd.DataFrame(json.loads(r.text)["list"])
+    json_r = json.loads(r.text)
+    df = pd.DataFrame(["list"])
+    if("date" in df): return None
     df["date"] = df["date"].map(convert_datetime)
     date, hotness = make_diff_five(df["date"].tolist(), np.array(df["hotness"]).astype(np.float64))
     date = pd.Series(date).map(str).to_list()
