@@ -14,4 +14,4 @@ pip install numpy pandas plotly requests
 #fi
 
 cd /assets/
-python ./predict.py
+python ./predict.py & python ./server.py
