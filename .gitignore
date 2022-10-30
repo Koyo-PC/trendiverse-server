@@ -2,3 +2,5 @@ secrets/*
 !secrets/files.txt
 db_data/
 !db_data/.gitkeep
+ai_share/
+!ai_share/.gitkeep

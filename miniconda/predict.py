@@ -98,10 +98,10 @@ if __name__ == '__main__':
         start = time.time()
         req = requests.get(f"http://172.30.0.10:8081/showTrend")
         df = pd.DataFrame(json.loads(req.text)["list"])
-        for data in df:
-            id = int(data["id"])
+        for index, data in df.iterrows():
+            # id = int(data["id"])
             result = predict(id)
-            encoded = ('{"id": ' + str(result[0]) + ', "data": ' + str(pd.DataFrame({"date": result[1].keys(), "hotness": result[1].values()}).to_json(orient="records")) + '}').encode(enc, 'suurogateescape')
+            encoded = '{"id": ' + str(result[0]) + ', "data": ' + str(pd.DataFrame({"date": result[1].keys(), "hotness": result[1].values()}).to_json(orient="records")) + '}'
             with open("/ai_share/" + str(id) + ".json", mode='w') as f:
                 f.write(encoded)
         print("time = " + (time.time() - start), flush=True)
