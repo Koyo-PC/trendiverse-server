@@ -96,7 +96,7 @@ def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
 if __name__ == '__main__':
     while True:
         start = time.time()
-        req = requests.get(f"http://172.30.0.10:8081/showTrend")
+        req = requests.get(f"http://172.30.0.10:8081/showTracking")
         df = pd.DataFrame(json.loads(req.text)["list"])
         for index, data in df.iterrows():
             # id = int(data["id"])
