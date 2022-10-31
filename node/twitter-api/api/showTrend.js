@@ -1,4 +1,5 @@
 const DB = require("../../rest-api/db/TrendiverseDB.js");
+const getDataById = require('./getDataById.js');
 const getNameById = require('./getNameById.js');
 const trendScrape = require('./trendScrape.js');
 
@@ -12,6 +13,8 @@ module.exports = async function showTracked(date){
         try {
             data = await DB.queryp(`select * from twitter_current_trends`,true);
             for (const trend of data){
+                const trend_data = await getDataById(trend["id"])
+                if(trend_data.length <= 1) continue;
                 const name = await getNameById(trend["id"]);
                 trend["name"] = name;
             }

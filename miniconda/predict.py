@@ -18,7 +18,7 @@ import time
 PORT = 8000
 
 
-def predict(trend_id: int) -> Tuple[int, Dict[datetime.datetime, np.float64]]:
+def predict(trend_id: int) -> Tuple[int, Dict[str, int]]:
     # 入力データを生成
     r = requests.get(f"http://172.30.0.10:8081/getDataById?id={trend_id}")
     df = pd.DataFrame(json.loads(r.text)["list"])
@@ -112,5 +112,5 @@ if __name__ == '__main__':
             encoded = '{"id": ' + str(result[0]) + ', "data": ' + str(pd.DataFrame({"date": result[1].keys(), "hotness": result[1].values()}).to_json(orient="records")) + '}'
             with open("/ai_share/" + str(id) + ".json", mode='w') as f:
                 f.write(encoded)
-        print("time = " + (time.time() - start), flush=True)
+        print("time = " + str(time.time() - start), flush=True)
         time.sleep(300 - (time.time() - start))
