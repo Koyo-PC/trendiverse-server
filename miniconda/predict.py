@@ -113,4 +113,4 @@ if __name__ == '__main__':
             with open("/ai_share/" + str(id) + ".json", mode='w') as f:
                 f.write(encoded)
         print("time = " + str(time.time() - start), flush=True)
-        time.sleep(300 - (time.time() - start))
+        time.sleep(max(0, 300 - (time.time() - start)))
