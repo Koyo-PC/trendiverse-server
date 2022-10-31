@@ -222,6 +222,30 @@ function main() {
                 const list = await TwitterAPI.getPopularDataByName(name);
                 const json = JSON.stringify({list});
                 res.end(json);
+            } else if (path == "/getDividedDataById"){
+                res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
+                const id = params.get("id");
+                const since = params.get("since");
+                /** 
+                 * example: /getDividedDataById?id=1
+                 * OR
+                 * example: /getDividedDataById?id=1&since=2022-01-01-00-00-00
+                */
+                const list = await TwitterAPI.getDividedDataById(id,since);
+                const json = JSON.stringify({list});
+                res.end(json);
+            } else if (path == "/getDividedDataByName"){
+                res.writeHead(200, {"content-type": "application/json; charset=utf-8"});
+                const name = params.get("name");
+                const since = params.get("since");
+                /** 
+                 * example: /getDividedDataByName?name=艦これ
+                 * OR
+                 * example: /getDividedDataByName?name=艦これ&since=2022-01-01-00-00-00
+                */
+                const list = await TwitterAPI.getDividedDataByName(name,since);
+                const json = JSON.stringify({list});
+                res.end(json);
             } else {
                 res.writeHead(404, {"content-type": "text/plain; charset=utf-8"});
                 res.end("404 Not Found");

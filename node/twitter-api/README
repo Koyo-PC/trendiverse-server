@@ -17,6 +17,8 @@ GET method:
     getPopularTweetsById(id) : trend id -> get popular tweets
     getPopularDataById(id) : get popular tweets(id) by id
     getPopularDataByName(name) : get popular tweets(id) by name
+    getDividedDataById(id) : twitter table id -> divided data
+    getDividedDataByName(name) : twitter table name -> divided data
 
 POST method:
     addToDB(id,arr) or addToDB(name,arr) : (create a table and) put the data into the table  

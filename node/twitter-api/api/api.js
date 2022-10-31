@@ -14,6 +14,8 @@ const getPopularTweetsByName = require("./getPopularTweetsByName.js");
 const getPopularTweetsById = require("./getPopularTweetsById.js");
 const getPopularDataById = require("./getPopularDataById.js");
 const getPopularDataByName = require("./getPopularDataByName.js");
+const getDividedDataById = require("./getDividedDataById.js");
+const getDividedDataByName = require("./getDividedDataByName.js");
 
 const getAIDataById = require("./getAIDataById.js");
 const getAIDataByName = require("./getAIDataByName.js");
@@ -35,6 +37,8 @@ module.exports =  class TwitterAPI {
     static getPopularTweetsById = getPopularTweetsById;
     static getPopularDataById = getPopularDataById;
     static getPopularDataByName = getPopularDataByName;
+    static getDividedDataById = getDividedDataById;
+    static getDividedDataByName = getDividedDataByName;
 
     static getAIDataById = getAIDataById;
     static getAIDataByName = getAIDataByName;

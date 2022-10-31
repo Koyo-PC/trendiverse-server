@@ -1,4 +1,5 @@
 const DB = require("../../rest-api/db/TrendiverseDB.js");
+
 /**
  * table_id -> data
  * @param {int} id trend id
