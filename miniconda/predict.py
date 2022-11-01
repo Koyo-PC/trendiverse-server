@@ -99,11 +99,15 @@ def predict(trend_id: int) -> Tuple[int, Dict[str, int]]:
         predicted_graph[0] = pd.DataFrame(np.array([pd.Series(prediction_date).map(str).to_list(), prediction.tolist()]).T, columns=["date", "hotness"]).to_dict("records")
     else:
         for i in range(len(part_list)):
-            each_df = pd.DataFrame(part_list[i])
-            each_date = each_df["date"].map(convert_datetime).tolist()
-            each_hotness = np.array(each_df["hotness"])
-            each_date, each_hotness = make_diff_five(each_date, each_hotness)
-            predicted_graph[i] = pd.DataFrame(np.array([pd.Series(each_date).map(str).to_list(), each_hotness.tolist()]).T, columns=["date", "hotness"]).to_dict("records")
+            if i != len(part_list) - 1:
+                each_df = pd.DataFrame(part_list[i])
+                each_date = each_df["date"].map(convert_datetime).tolist()
+                each_hotness = np.array(each_df["hotness"])
+                each_date, each_hotness = make_diff_five(each_date, each_hotness)
+                predicted_graph[i] = pd.DataFrame(
+                np.array([pd.Series(each_date).map(str).to_list(), each_hotness.tolist()]).T, columns=["date", "hotness"]).to_dict("records")
+            else:
+                predicted_graph[i] = pd.DataFrame(np.array([pd.Series(prediction_date).map(str).to_list(), prediction.tolist()]).T, columns=["date", "hotness"]).to_dict("records")
 
     return tracked_id[nearest_id], predicted_graph
 
