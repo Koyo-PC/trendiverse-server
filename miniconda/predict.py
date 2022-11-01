@@ -21,8 +21,9 @@ PORT = 8000
 
 def predict(trend_id: int) -> Tuple[int, Dict[str, int]]:
     # 入力データを生成
-    r = requests.get(f"http://172.30.0.10:8081/getDataById?id={trend_id}")
-    df = pd.DataFrame(json.loads(r.text)["list"])
+    r = requests.get(f"http://172.30.0.10:8081/getDividedDataById?id={trend_id}")
+    part_list = json.loads(r.text)["list"]
+    df = pd.DataFrame(part_list[-1])
     df["date"] = df["date"].map(convert_datetime)
     X_date: List[datetime]
     X: nparray
@@ -92,12 +93,22 @@ def predict(trend_id: int) -> Tuple[int, Dict[str, int]]:
     # fig.add_trace(go.Scatter(x=prediction_date, y=original_hotness[nearest_id], line={'color': '#00008B'}, name="original"))
     # fig.write_html("figures/prediction.html")
 
-    predicted_graph = dict(zip(pd.Series(prediction_date).map(str).to_list(), prediction.tolist()))
+    predicted_graph: List[List[Dict[str, int]]] = list(range(len(part_list)))
+    if len(part_list) == 1:
+        predicted_graph[0] = pd.DataFrame(np.array([pd.Series(prediction_date).map(str).to_list(), prediction.tolist()]).T, columns=["date", "hotness"]).to_dict("records")
+    else:
+        for i in range(len(part_list)):
+            each_df = pd.DataFrame(part_list[i])
+            each_date = each_df["date"].map(convert_datetime).tolist()
+            each_hotness = np.array(each_df["hotness"])
+            each_date, each_hotness = make_diff_five(each_date, each_hotness)
+            predicted_graph[i] = pd.DataFrame(np.array([pd.Series(each_date).map(str).to_list(), each_hotness.tolist()]).T, columns=["date", "hotness"]).to_dict("records")
+
     return tracked_id[nearest_id], predicted_graph
 
 def writeData(id):
     result = predict(id)
-    encoded = '{"id": ' + str(result[0]) + ', "data": ' + str(pd.DataFrame({"date": result[1].keys(), "hotness": result[1].values()}).to_json(orient="records")) + '}'
+    encoded = '{"id": ' + str(result[0]) + ', "data": ' + str(result[1]) + '}'
     with open("/ai_share/" + str(id) + ".json", mode='w') as f:
         f.write(encoded)
 

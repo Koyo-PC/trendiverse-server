@@ -38,7 +38,7 @@ class StubHttpRequestHandler(BaseHTTPRequestHandler):
                 str_result = f.read()
         else:
             result = getData(id)
-            if(result == None):
+            if result is None:
                 encoded = "Trend Not Found".encode(enc, 'suurogateescape')
                 self.send_response(HTTPStatus.NOT_FOUND)
                 self.send_header("Content-type", "text/plain; charset=%s" % enc)
@@ -63,11 +63,13 @@ def getData(trend_id: int) -> Tuple[int, Dict[str, int]] | None:
     r = requests.get(f"http://172.30.0.10:8081/getDataById?id={trend_id}")
     json_r = json.loads(r.text)
     df = pd.DataFrame(json_r["list"])
-    if(df.empty): return None
+    if df.empty: return None
     df["date"] = df["date"].map(convert_datetime)
     date, hotness = make_diff_five(df["date"].tolist(), np.array(df["hotness"]).astype(np.float64))
     date = pd.Series(date).map(str).to_list()
     hotness = hotness.astype(int).tolist()
+    if len(dict) == 1:
+        return None
     return trend_id, dict(zip(date, hotness))
 
 if __name__ == '__main__':
