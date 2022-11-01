@@ -16,7 +16,7 @@ const getDataById = require("./getDataById.js");
         const dateB = new Date(raw[i+1]["date"]);
 
         const diff = (dateB.getTime() - dateA.getTime()) / (86400000); //1日=86400秒
-        if(diff > 1){
+        if(diff > 1.1){
             ret.push([]);
         }
         ret[ret.length-1].push(raw[i+1]);
