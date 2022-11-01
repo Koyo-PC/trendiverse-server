@@ -78,7 +78,7 @@ def predict(trend_id: int) -> Tuple[int, Dict[str, int]]:
         prediction_date[len(X_date):] = (pd.Series(date[1000:]) + timedelta).to_list()
         prediction_date = (pd.Series(prediction_date) + datetime.timedelta(hours=9)).to_list()
     else:
-        timedelta = start_time - date[0]
+        timedelta = start_time - datetime.datetime.strptime(date[0], "%Y-%m-%d %H:%M")
         prediction_date = (date + timedelta + datetime.timedelta(hours=9)).to_list()
     print(f"contained datetime: {prediction_date[len(prediction_date) - 1]}")
 
