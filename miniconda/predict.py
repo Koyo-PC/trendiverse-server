@@ -20,6 +20,7 @@ PORT = 8000
 
 
 def predict(trend_id: int) -> Tuple[int, Dict[str, int]]:
+    print(f"====== predicting {trend_id} ======")
     # 入力データを生成
     r = requests.get(f"http://172.30.0.10:8081/getDividedDataById?id={trend_id}")
     part_list = json.loads(r.text)["list"]
