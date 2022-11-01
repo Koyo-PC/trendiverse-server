@@ -65,6 +65,9 @@ def get_nearest(new: nparray, usable_olds: nparray) -> Tuple[int, float]:
 def convert_datetime(date: str):
     return datetime.strptime(date[0:4] + "-" + date[5:7] + "-" + date[8:10] + " " + date[11:16], "%Y-%m-%d %H:%M")
 
+def convert_datetime_for_dumped(date: str):
+    return datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+
 # 全部5分間隔にする
 def make_diff_five(date: List[datetime], hotness: nparray) -> Tuple[List[datetime], nparray]:
     if len(date) == 1:

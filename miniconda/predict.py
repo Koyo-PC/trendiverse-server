@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import requests
 import json
-from my_functions import nparray, get_tracked_id, get_tracked_hotness, normalize_array, normalize_hotness, get_usable, get_nearest, convert_datetime, make_diff_five
+from my_functions import nparray, get_tracked_id, get_tracked_hotness, normalize_array, normalize_hotness, get_usable, get_nearest, convert_datetime, convert_datetime_for_dumped,make_diff_five
 import plotly.graph_objects as go
 from copy import deepcopy
 import pickle
@@ -70,6 +70,7 @@ def predict(trend_id: int) -> Tuple[int, Dict[str, int]]:
     date: pd.Series
     with open("dumped_data/fivemin_dates_Oct31.bin", "rb") as p:
         date = pd.Series(pickle.load(p)[nearest_id])
+    date.map(convert_datetime_for_dumped)
 
     if is_too_long:
         prediction_date = list(range(prediction.size))
@@ -78,7 +79,7 @@ def predict(trend_id: int) -> Tuple[int, Dict[str, int]]:
         prediction_date[len(X_date):] = (pd.Series(date[1000:]) + timedelta).to_list()
         prediction_date = (pd.Series(prediction_date) + datetime.timedelta(hours=9)).to_list()
     else:
-        timedelta = start_time - datetime.datetime.strptime(date[0], "%Y-%m-%d %H:%M:%S")
+        timedelta = start_time - date[0]
         prediction_date = (date + timedelta + datetime.timedelta(hours=9)).to_list()
     print(f"contained datetime: {prediction_date[len(prediction_date) - 1]}")
 
