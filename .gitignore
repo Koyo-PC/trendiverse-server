@@ -4,7 +4,3 @@ db_data/
 !db_data/.gitkeep
 ai_share/
 !ai_share/.gitkeep
-miniconda/dumped_data/
-!fivemin_tracked_id_Oct31.bin
-!fivemin_dates_Oct31.bin
-!fivemin_hotness_Oct31.bin
