@@ -14,6 +14,7 @@ from http.server import BaseHTTPRequestHandler
 from http.server import ThreadingHTTPServer
 from http import HTTPStatus
 import time
+from multiprocessing import Pool
 
 PORT = 8000
 
@@ -93,6 +94,12 @@ def predict(trend_id: int) -> Tuple[int, Dict[str, int]]:
     predicted_graph = dict(zip(pd.Series(prediction_date).map(str).to_list(), prediction.tolist()))
     return tracked_id[nearest_id], predicted_graph
 
+def writeData(id):
+    result = predict(id)
+    encoded = '{"id": ' + str(result[0]) + ', "data": ' + str(pd.DataFrame({"date": result[1].keys(), "hotness": result[1].values()}).to_json(orient="records")) + '}'
+    with open("/ai_share/" + str(id) + ".json", mode='w') as f:
+        f.write(encoded)
+
 if __name__ == '__main__':
     while True:
         start = time.time()
@@ -107,10 +114,7 @@ if __name__ == '__main__':
         for index, data in df_trend.iterrows():
             if int(data["id"]) in ids:
                 ids.append(int(data["id"]))
-        for id in ids:
-            result = predict(id)
-            encoded = '{"id": ' + str(result[0]) + ', "data": ' + str(pd.DataFrame({"date": result[1].keys(), "hotness": result[1].values()}).to_json(orient="records")) + '}'
-            with open("/ai_share/" + str(id) + ".json", mode='w') as f:
-                f.write(encoded)
+        p = Pool(3)
+        p.map(writeData, ids)
         print("time = " + str(time.time() - start), flush=True)
         time.sleep(max(0, 300 - (time.time() - start)))
