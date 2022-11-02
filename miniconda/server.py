@@ -68,7 +68,7 @@ def getData(trend_id: int) -> Tuple[int, Dict[str, int]] | None:
     date, hotness = make_diff_five(df["date"].tolist(), np.array(df["hotness"]).astype(np.float64))
     date = pd.Series(date).map(str).to_list()
     hotness = hotness.astype(int).tolist()
-    if len(dict) == 1:
+    if len(date) == 1:
         return None
     return trend_id, dict(zip(date, hotness))
 
