@@ -63,7 +63,7 @@ def getData(trend_id: int) -> Tuple[int, Dict[str, int]] | None:
     r = requests.get(f"http://172.30.0.10:8081/getDividedDataById?id={trend_id}")
     part_list = json.loads(r.text)["list"]
     parts = len(part_list)
-    if len(parts) == 0:
+    if parts == 0:
         return None
     ret: List[List[Dict[str, int]]] = list(range(parts))
     for i in range(parts):
