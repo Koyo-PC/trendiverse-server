@@ -12,7 +12,7 @@ module.exports = async function getDataById(id,since){
     
     try{
         if(since == "") data = await DB.queryp(`select * from twitter_trend${id}`,true);
-        else data = await DB.queryp(`select * from twitter_trend${id} where date > "${since}"`,true);
+        else data = await DB.queryp(`select * from twitter_trend${id} where date > "${since}" and hotness != 0`,true);
     } catch{
         return [];
     }
