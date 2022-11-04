@@ -70,7 +70,7 @@ def predict(trend_id: int) -> Tuple[int, Dict[str, int]]:
     print(f"error: {error}")
 
     date: pd.Series
-    with open("dumped_data/edited_cut_fivemin_dates_Nov4.bin", "rb") as p:
+    with open("dumped_data/cut_fivemin_dates_Nov4.bin", "rb") as p:
         date = pd.Series(pickle.load(p)[nearest_id])
     date = date.map(convert_datetime_for_dumped)
 
