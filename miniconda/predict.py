@@ -138,3 +138,4 @@ if __name__ == '__main__':
             time.sleep(max(0, 300 - (time.time() - start)))
         except Exception as e:
             print(e)
+            pass
