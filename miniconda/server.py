@@ -73,7 +73,7 @@ def getData(trend_id: int) -> Tuple[int, Dict[str, int]] | None:
         if len(date) == 0:
             return None
         date, hotness = make_diff_five(date, hotness)
-        ret[i] = pd.DataFrame(np.array([pd.Series(date).map(str).to_list(), hotness.tolist()]).T, columns=["date", "hotness"]).to_dict("records")
+        ret[i] = pd.DataFrame(np.array([(pd.Series(date) + datetime.timedelta(hours=9)).map(str).to_list(), hotness.tolist()]).T, columns=["date", "hotness"]).to_dict("records")
     if len(ret) == 0:
         return None
     return trend_id, ret
