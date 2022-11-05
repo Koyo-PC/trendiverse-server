@@ -1,9 +1,8 @@
 from typing import List, Tuple
 import numpy as np
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 import pickle
 from bisect import bisect
-from zoneinfo import ZoneInfo
 
 nparray = np.ndarray
 
@@ -64,12 +63,10 @@ def get_nearest(new: nparray, usable_olds: nparray) -> Tuple[int, float]:
 
 # 標準の日付表記に直す
 def convert_datetime(date: str):
-    d = datetime.strptime(date[0:4] + "-" + date[5:7] + "-" + date[8:10] + " " + date[11:16], "%Y-%m-%d %H:%M")
-    return d.astimezone(ZoneInfo("Asia/Tokyo"))
+    return datetime.strptime(date[0:4] + "-" + date[5:7] + "-" + date[8:10] + " " + date[11:16], "%Y-%m-%d %H:%M")
 
 def convert_datetime_for_dumped(date: str):
-    d = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-    return d.astimezone(ZoneInfo("Asia/Tokyo"))
+    return datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
 
 # 全部5分間隔にする
 def make_diff_five(date: List[datetime], hotness: nparray) -> Tuple[List[datetime], nparray]:
