@@ -119,19 +119,22 @@ def writeData(id):
 
 if __name__ == '__main__':
     while True:
-        start = time.time()
-        ids = []
+        try :
+            start = time.time()
+            ids = []
 
-        req_tracking = requests.get(f"http://172.30.0.10:8081/showTracking")
-        df_tracking = pd.DataFrame(json.loads(req_tracking.text)["list"])
-        for index, data in df_tracking.iterrows():
-            ids.append(int(data["id"]))
-        req_trend = requests.get(f"http://172.30.0.10:8081/showTrend")
-        df_trend = pd.DataFrame(json.loads(req_trend.text)["list"])
-        for index, data in df_trend.iterrows():
-            if int(data["id"]) in ids:
+            req_tracking = requests.get(f"http://172.30.0.10:8081/showTracking")
+            df_tracking = pd.DataFrame(json.loads(req_tracking.text)["list"])
+            for index, data in df_tracking.iterrows():
                 ids.append(int(data["id"]))
-        p = Pool(3)
-        p.map(writeData, ids)
-        print("time = " + str(time.time() - start), flush=True)
-        time.sleep(max(0, 300 - (time.time() - start)))
+            req_trend = requests.get(f"http://172.30.0.10:8081/showTrend")
+            df_trend = pd.DataFrame(json.loads(req_trend.text)["list"])
+            for index, data in df_trend.iterrows():
+                if int(data["id"]) in ids:
+                    ids.append(int(data["id"]))
+            p = Pool(3)
+            p.map(writeData, ids)
+            print("time = " + str(time.time() - start), flush=True)
+            time.sleep(max(0, 300 - (time.time() - start)))
+        except Exception as e:
+            print(e)
