@@ -1,4 +1,14 @@
-# trendiverse-server
+# TrenDiverse Server
+
+[TrenDiverseアプリ](https://github.com/Koyo-PC/trendiverse-app)のサーバーとなります。
+サーバーをセルフホストしたい場合、本レポジトリをCloneし、Docker Composeで実行したのちに、アプリ側のサーバーアドレスを書き換え、Flutter SDKを用いてモバイル向けにビルドを行ってください。
+
+*パソコン甲子園2022 モバイル部門にて、チーム「sprouts」として作成したアプリケーションです。<br>
+ベストデザイン賞およびバンタン賞を受賞しました。(参考→[プレゼンの様子](https://youtu.be/tmhLiQvS4M4?t=2995))*
+
+*このアプリケーションは現状のまま提供され、一切のサポートは提供されません。バグや仕様変更、サーバーの停止などによりサービスを利用できなくなる恐れもあります。ご了承ください。*
+
+---
 
 ## Install dependency
 
